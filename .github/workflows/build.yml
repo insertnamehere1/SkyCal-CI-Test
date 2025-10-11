@@ -22,25 +22,29 @@ jobs:
       - name: Build Release
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
-      - name: ClickOnce Publish
+      # IMPORTANT: publish the actual project that has ClickOnce enabled
+      - name: ClickOnce Publish (.NET Framework 4.8.1)
         shell: pwsh
         run: >
-          msbuild "SkyCal.csproj"
+          msbuild "SkyCal\SkyCal.csproj"
           /t:Publish
           /p:Configuration=Release
-          /p:PublishProfile="ClickOnceProfile.pubxml"
-          # If the profile is under Properties\PublishProfiles, you can pass the full relative path:
-          # /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+
+      # Prove the output exists and show what was produced
+      - name: Inspect ClickOnce output
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "out\clickonce")) { throw "PublishDir out\clickonce not found" }
+          Get-ChildItem -Recurse "out\clickonce" | Select-Object FullName, Length | Format-Table -AutoSize
 
       - name: Stage artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          # Adjust path if your TFM differs
-          $pub = Get-ChildItem -Recurse -Directory -Filter app.publish | Select-Object -First 1 -Expand FullName
-          if (-not $pub) { throw "app.publish folder not found" }
-          if (Test-Path "$pub\setup.exe") { Copy-Item "$pub\setup.exe" artifacts\setup.exe -Force }
-          Compress-Archive -Path "$pub\*" -DestinationPath "artifacts\clickonce.zip" -Force
+          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
+          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
 
       - uses: actions/upload-artifact@v4
         with:
@@ -78,8 +82,9 @@ jobs:
           path: artifacts
       - name: Prepare site
         run: |
-          mkdir -p published/tmp
-          unzip -q artifacts/clickonce.zip -d published/tmp
+          rm -rf public
+          mkdir -p public/published
+          unzip -q artifacts/clickonce.zip -d public/published
           touch public/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
