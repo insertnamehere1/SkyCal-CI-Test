@@ -48,8 +48,8 @@ jobs:
 
       - name: Collect Artifacts
         run: |
-          mkdir artifacts
-          copy /y bin\Release\* artifacts\
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          Copy-Item -Path "bin\Release\*" -Destination "artifacts" -Recurse -Force
 
       - name: Upload CI Artifacts
         uses: actions/upload-artifact@v4
