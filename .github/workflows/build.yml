@@ -31,7 +31,7 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       - name: ClickOnce Publish
-        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="FolderProfile.pubxml"
+        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="ClickOnceProfile.pubxml"
 
       - name: Stage artifacts
         run: |
@@ -81,7 +81,7 @@ jobs:
 
       # Publish using your profile
       - name: ClickOnce Publish
-        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="FolderProfile.pubxml"
+        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="ClickOnceProfile.pubxml"
 
       # Stage: copy from the PublishDir set in the profile
       - name: Stage artifacts
