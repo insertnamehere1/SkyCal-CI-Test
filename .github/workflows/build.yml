@@ -76,7 +76,7 @@ jobs:
           mkdir -p published
           unzip -q artifacts/clickonce.zip -d published
           # Optional: add a simple index page
-          echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/index.html
+          echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/publish.html
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
 
