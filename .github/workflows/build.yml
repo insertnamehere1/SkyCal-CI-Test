@@ -11,11 +11,11 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SOLUTION_PATH: YourSolution.sln            # set this
-      PROJECT_PATH: path\to\YourProject.csproj   # set this
+      SOLUTION_PATH: "Bahtinov Collimator.sln"            # set this
+      PROJECT_PATH: SkyCal.csproj   # set this
       PUBLISH_ROOT: ${{ github.workspace }}\clickonce
       # If hosting on GitHub Pages, set your public install URL:
-      INSTALL_URL: https://<your-username>.github.io/<your-repo>/
+      INSTALL_URL: https://insertnamehere1.github.io/SkyCal-CI-Test/
 
     steps:
       - name: Checkout
@@ -92,7 +92,7 @@ jobs:
         run: |
           Expand-Archive -Path "${{ runner.temp }}\clickonce.zip" -DestinationPath "published" -Force
 
-      - name: Create index.html in published/
+      - name: Create publish.html in published/
         shell: pwsh
         run: |
           @"
