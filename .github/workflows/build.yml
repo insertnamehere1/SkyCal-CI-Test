@@ -105,9 +105,7 @@ jobs:
       - name: Prepare Pages content (/published)
         run: |
           set -e
-          rm -rf public
-          mkdir -p public/published
-          unzip -o artifacts/clickonce.zip -d public/published
+          unzip -o artifacts/clickonce.zip -d published
           # Ensure "Application Files" is served as-is by Pages
           touch public/.nojekyll
           # Optional index
