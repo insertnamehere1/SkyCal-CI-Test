@@ -1,11 +1,11 @@
 name: Build and Release (Windows .NET Framework)
 
 on:
-  workflow_dispatch:     # lets you click “Run workflow” in the Actions tab
   push:
-    branches: ['**']     # run on any branch push
+    branches: [ main ]
+    tags:
+      - 'v3.1.0'   # pushing a tag like v1.2.3 will produce a release
   pull_request:
-
 
 jobs:
   build-test:
@@ -22,7 +22,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: NuGet restore
-        run: nuget restore Bahtinov Collimator.sln
+        run: nuget restore "Bahtinov Collimator.sln"
 
       # If you have .NET Core test projects too, set up a SDK:
       # - name: Set up .NET SDK
@@ -31,7 +31,7 @@ jobs:
       #     dotnet-version: '8.0.x'
 
       - name: Build Release
-        run: msbuild Bahtinov Collimator.sln /t:Rebuild /p:Configuration=Release /m
+        run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       # If you have MSTest or NUnit for .NET Framework, use VSTest:
       # - name: Discover and run tests with VSTest
