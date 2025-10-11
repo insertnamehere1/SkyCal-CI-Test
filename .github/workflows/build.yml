@@ -108,8 +108,6 @@ jobs:
           unzip -o artifacts/clickonce.zip -d published
           # Ensure "Application Files" is served as-is by Pages
           touch published/.nojekyll
-          # Optional index
-          echo "<h1>SkyCal ClickOnce Feed</h1>" > public/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
