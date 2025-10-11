@@ -23,7 +23,8 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       # IMPORTANT: publish the actual project that has ClickOnce enabled
-      - name: ClickOnce Publish (.NET Framework 4.8.1)
+
+      - name: ClickOnce Publish (force known output dir)
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
@@ -31,6 +32,14 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+
+      # Prove where files went and what got produced
+      - name: Inspect publish output
+        shell: pwsh
+        run: |
+          Write-Host "Listing out\clickonce:"
+          if (-not (Test-Path "out\clickonce")) { throw "PublishDir out\clickonce not found" }
+          Get-ChildItem -Recurse -Force "out\clickonce" | Select-Object FullName,Length | Format-Table -AutoSize
 
       # Prove the output exists and show what was produced
       - name: Inspect ClickOnce output
