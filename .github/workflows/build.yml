@@ -2,7 +2,7 @@ name: Build and Release (Windows .NET Framework)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     tags:
       - 'v3.1.0'   # pushing a tag like v1.2.3 will produce a release
   pull_request:
