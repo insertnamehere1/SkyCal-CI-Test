@@ -8,7 +8,7 @@
         <expiration maximumAge="0" unit="days" />
       </update>
     </subscription>
-    <deploymentProvider codebase="https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/SkyCal%20Focus%20and%20Collimation%20Tool.application" />
+    <deploymentProvider codebase="https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/SkyCal%20Focus%20and%20Collimation%20Tool.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.8.1" profile="Full" supportedRuntime="4.0.30319" />
