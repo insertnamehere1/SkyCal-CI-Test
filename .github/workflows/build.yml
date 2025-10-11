@@ -41,8 +41,7 @@ jobs:
 
       # If you use ClickOnce, you can publish like this:
       - name: ClickOnce Publish
-        run: msbuild YourProject.csproj /t:Publish ^
-             /p:Configuration=Release /p:PublishProfile=YourClickOnceProfile.pubxml
+        run: msbuild YourProject.csproj /t:Publish /p:Configuration=Release /p:PublishProfile=YourClickOnceProfile.pubxml
 
       # If you use WiX or Inno Setup, add those build steps here
       # and place the generated MSI/EXE into a known output folder.
