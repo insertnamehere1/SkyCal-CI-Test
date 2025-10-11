@@ -275,9 +275,6 @@
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utilities\DebugPictureBox.resx">
-      <DependentUpon>DebugPictureBox.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="help.pdf" />
     <None Include="Properties\help.pdf" />
