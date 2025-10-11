@@ -1,8 +1,11 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/refs/heads/master/SkyCal.logo.png" alt="SkyCal Logo" width="250">
+  <img src="https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/blob/master/SkyCal.logo.png" alt="SkyCal Logo" width="250">
 </p>
+
+
+https://github.com/insertnamehere1/SkyCal-CI-Test/blob/master/SkyCal.logo.png?raw=true
 
 <h1 align="center">SkyCal Focus and Collimation Tool</h1>
 
