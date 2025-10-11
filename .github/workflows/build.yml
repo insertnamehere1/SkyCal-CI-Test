@@ -26,7 +26,7 @@ jobs:
       - name: ClickOnce Publish (.NET Framework 4.8.1)
         shell: pwsh
         run: >
-          msbuild "SkyCal\SkyCal.csproj"
+          msbuild "SkyCal.csproj"
           /t:Publish
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
