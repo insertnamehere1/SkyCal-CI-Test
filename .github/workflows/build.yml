@@ -72,7 +72,7 @@ jobs:
       - name: Update published/ from clickonce.zip
         run: |
           set -e
-          unzip -q artifacts/clickonce.zip -d published
+          unzip -o artifacts/clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
 
