@@ -109,7 +109,7 @@
     <ApplicationIcon>focusIcon2.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>5910F645802AF7EB362B74EAD07AF07F9B149FF0</ManifestCertificateThumbprint>
