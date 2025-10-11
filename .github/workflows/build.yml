@@ -1,11 +1,11 @@
 name: Build and Release (Windows .NET Framework)
 
 on:
+  workflow_dispatch:     # lets you click “Run workflow” in the Actions tab
   push:
-    branches: [ main ]
-    tags:
-      - 'v3.1.0'   # pushing a tag like v1.2.3 will produce a release
+    branches: ['**']     # run on any branch push
   pull_request:
+
 
 jobs:
   build-test:
