@@ -41,7 +41,7 @@ jobs:
 
       # If you use ClickOnce, you can publish like this:
       - name: ClickOnce Publish
-        run: msbuild YourProject.csproj /t:Publish /p:Configuration=Release /p:PublishProfile=YourClickOnceProfile.pubxml
+        run: msbuild SkyCal.csproj /t:Publish /p:Configuration=Release /p:PublishProfile=YourClickOnceProfile.pubxml
 
       # If you use WiX or Inno Setup, add those build steps here
       # and place the generated MSI/EXE into a known output folder.
@@ -49,7 +49,7 @@ jobs:
       - name: Collect Artifacts
         run: |
           mkdir artifacts
-          copy /y Path\To\Your\Built\App\bin\Release\* artifacts\
+          copy /y bin\Release\* artifacts\
 
       - name: Upload CI Artifacts
         uses: actions/upload-artifact@v4
