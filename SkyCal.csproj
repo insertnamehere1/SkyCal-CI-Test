@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Projects\Astronomy Projects\Bahtinov Collimator\published\</PublishUrl>
+    <PublishUrl>https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -26,8 +26,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</InstallUrl>
-    <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
+    <InstallUrl>https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/</InstallUrl>
+    <UpdateUrl>https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/</UpdateUrl>
     <ProductName>SkyCal Focus and Collimation Tool</ProductName>
     <PublisherName>Chris Dowd</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
