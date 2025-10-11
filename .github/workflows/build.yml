@@ -79,13 +79,24 @@ jobs:
           name: build-output
           path: artifacts
 
+      # Publish using your profile
+      - name: ClickOnce Publish
+        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="FolderProfile.pubxml"
+
+      # Stage: copy from the PublishDir set in the profile
+      - name: Stage artifacts
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          Copy-Item -Path "bin\Release\net8.0-windows\app.publish\setup.exe" -Destination "artifacts\setup.exe" -Force
+          Compress-Archive -Path "bin\Release\net8.0-windows\app.publish\*" -DestinationPath "artifacts\clickonce.zip" -Force
+
+      # Pages: deploy to /published (must match InstallUrl/UpdateUrl)
       - name: Prepare Pages content
         run: |
           rm -rf public
-          mkdir -p public/publish
-          unzip -q artifacts/clickonce.zip -d public/publish
+          mkdir -p public/published
+          unzip -q artifacts/clickonce.zip -d public/published
           touch public/.nojekyll
-          echo "<h1>SkyCal ClickOnce Feed</h1>" > public/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
