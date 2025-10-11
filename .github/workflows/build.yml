@@ -29,13 +29,13 @@ jobs:
 
       # ClickOnce publish (adjust paths to match your repo)
       - name: ClickOnce Publish
-        run: msbuild "SkyCal\SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="FolderProfile.pubxml"
+        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="FolderProfile.pubxml"
 
       # Collect publish output (ClickOnce)
       - name: Collect Artifacts
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          Copy-Item -Path "SkyCal\bin\Release\app.publish\*" -Destination "artifacts" -Recurse -Force
+          Copy-Item -Path "bin\Release\app.publish\*" -Destination "artifacts" -Recurse -Force
 
       - name: Upload CI Artifacts
         uses: actions/upload-artifact@v4
@@ -64,7 +64,7 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore "Bahtinov Collimator.sln"
       - name: Build for analysis
-        run: msbuild "SkyCal\SkyCal.csproj" /t:Rebuild /p:Configuration=Release /m
+        run: msbuild "SkyCal.csproj" /t:Rebuild /p:Configuration=Release /m
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
