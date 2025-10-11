@@ -1,4 +1,4 @@
-name: Build and Release (Windows .NET Framework)
+name: Build and Release (Windows .NET)
 
 on:
   push:
@@ -6,23 +6,15 @@ on:
     tags: ['v*.*.*']
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up NuGet
-        uses: NuGet/setup-nuget@v2
+      - uses: NuGet/setup-nuget@v2
 
-      - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - uses: microsoft/setup-msbuild@v2
 
       - name: Restore
         run: nuget restore "Bahtinov Collimator.sln"
@@ -37,37 +29,35 @@ jobs:
           /t:Publish
           /p:Configuration=Release
           /p:PublishProfile="ClickOnceProfile.pubxml"
-          # If needed, use full path:
+          # If the profile is under Properties\PublishProfiles, you can pass the full relative path:
           # /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
 
       - name: Stage artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          Copy-Item "bin\Release\**\app.publish\setup.exe" artifacts\setup.exe -Force
+          # Adjust path if your TFM differs
           $pub = Get-ChildItem -Recurse -Directory -Filter app.publish | Select-Object -First 1 -Expand FullName
+          if (-not $pub) { throw "app.publish folder not found" }
+          if (Test-Path "$pub\setup.exe") { Copy-Item "$pub\setup.exe" artifacts\setup.exe -Force }
           Compress-Archive -Path "$pub\*" -DestinationPath "artifacts\clickonce.zip" -Force
 
-      - name: Upload CI Artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: artifacts
 
+  # example: release and pages jobs go here; do NOT run msbuild in them
   release:
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
-    permissions:
-      contents: write
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-output
           path: artifacts
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           files: artifacts/setup.exe
           generate_release_notes: true
@@ -82,38 +72,18 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-output
           path: artifacts
-
-      # Publish using your profile
-      - name: ClickOnce Publish
-        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="ClickOnceProfile.pubxml"
-
-      # Stage: copy from the PublishDir set in the profile
-      - name: Stage artifacts
-        run: |
-          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          Copy-Item -Path "bin\Release\net8.0-windows\app.publish\setup.exe" -Destination "artifacts\setup.exe" -Force
-          Compress-Archive -Path "bin\Release\net8.0-windows\app.publish\*" -DestinationPath "artifacts\clickonce.zip" -Force
-
-      # Pages: deploy to /published (must match InstallUrl/UpdateUrl)
-      - name: Prepare Pages content
+      - name: Prepare site
         run: |
           rm -rf public
           mkdir -p public/published
           unzip -q artifacts/clickonce.zip -d public/published
           touch public/.nojekyll
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: public
-          # name defaults to 'github-pages'; setting explicitly is fine too
-          # name: github-pages
-
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
