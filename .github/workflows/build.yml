@@ -78,7 +78,7 @@ jobs:
           path: artifacts
       - name: Prepare site
         run: |
-          mkdir published/tmp
+          mkdir -p published/tmp
           unzip -q artifacts/clickonce.zip -d published/tmp
           touch public/.nojekyll
       - uses: actions/upload-pages-artifact@v3
