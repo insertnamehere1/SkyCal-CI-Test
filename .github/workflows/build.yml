@@ -85,35 +85,36 @@ jobs:
           files: artifacts/setup.exe
           generate_release_notes: true
 
-  pages-deploy:
-    name: Deploy ClickOnce feed to Pages
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: artifacts
+pages-deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  permissions:
+    pages: write
+    id-token: write
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+  steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: artifacts
 
-      - name: Prepare Pages content (/published)
-        run: |
-          set -e
-          unzip -o artifacts/clickonce.zip -d published
-          # Ensure "Application Files" is served as-is by Pages
-          touch published/.nojekyll
+    - name: Stage to /published
+      run: |
+        set -e
+        rm -rf public
+        mkdir -p public/published
+        unzip -o artifacts/clickonce.zip -d public/published
+        # Ensure Pages serves "Application Files" properly
+        touch public/.nojekyll
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: public
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
