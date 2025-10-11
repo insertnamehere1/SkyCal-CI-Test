@@ -31,13 +31,22 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       - name: ClickOnce Publish
-        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="ClickOnceProfile.pubxml"
+        shell: pwsh
+        run: >
+          msbuild "SkyCal.csproj"
+          /t:Publish
+          /p:Configuration=Release
+          /p:PublishProfile="ClickOnceProfile.pubxml"
+          # If needed, use full path:
+          # /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
 
       - name: Stage artifacts
+        shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          Copy-Item -Path "bin\Release\app.publish\setup.exe" -Destination "artifacts\setup.exe" -Force
-          Compress-Archive -Path "bin\Release\app.publish\*" -DestinationPath "artifacts\clickonce.zip" -Force
+          Copy-Item "bin\Release\**\app.publish\setup.exe" artifacts\setup.exe -Force
+          $pub = Get-ChildItem -Recurse -Directory -Filter app.publish | Select-Object -First 1 -Expand FullName
+          Compress-Archive -Path "$pub\*" -DestinationPath "artifacts\clickonce.zip" -Force
 
       - name: Upload CI Artifacts
         uses: actions/upload-artifact@v4
