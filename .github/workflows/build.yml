@@ -1,31 +1,41 @@
-name: Build and Release (Windows .NET)
+name: Build, Release, and Pages Deploy (ClickOnce .NET Framework 4.8.1)
 
 on:
   push:
     branches: [ master ]
-    tags: ['v*.*.*']
+    tags: ['v*.*.*']     # push a tag like v3.1.3 to trigger a Release
   workflow_dispatch:
+
+# Required for Pages + artifacts + releases
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
+    name: Build & Publish (Windows)
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: NuGet/setup-nuget@v2
+      - name: Set up NuGet
+        uses: NuGet/setup-nuget@v2
 
-      - uses: microsoft/setup-msbuild@v2
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
 
       - name: Restore
         run: nuget restore "Bahtinov Collimator.sln"
 
-      - name: Build Release
+      - name: Build (Release)
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
-      # IMPORTANT: publish the actual project that has ClickOnce enabled
-
-      - name: ClickOnce Publish (binlog)
-        if: ${{ always() }}
+      # Publish the actual project that has ClickOnce enabled.
+      # Adjust the csproj path and the profile file name if different.
+      - name: ClickOnce Publish
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
@@ -33,23 +43,15 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
-          /bl:artifacts\publish.binlog
 
-      # Prove where files went and what got produced
-      - name: Inspect publish output
-        shell: pwsh
-        run: |
-          Write-Host "Listing out\clickonce:"
-          if (-not (Test-Path "out\clickonce")) { throw "PublishDir out\clickonce not found" }
-          Get-ChildItem -Recurse -Force "out\clickonce" | Select-Object FullName,Length | Format-Table -AutoSize
-
-      # Prove the output exists and show what was produced
+      # Verify where files landed
       - name: Inspect ClickOnce output
         shell: pwsh
         run: |
           if (-not (Test-Path "out\clickonce")) { throw "PublishDir out\clickonce not found" }
           Get-ChildItem -Recurse "out\clickonce" | Select-Object FullName, Length | Format-Table -AutoSize
 
+      # Stage artifacts for downstream jobs
       - name: Stage artifacts
         shell: pwsh
         run: |
@@ -57,27 +59,34 @@ jobs:
           if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
           Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: artifacts
 
-  # example: release and pages jobs go here; do NOT run msbuild in them
   release:
+    name: Create GitHub Release (on tag)
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: artifacts
-      - uses: softprops/action-gh-release@v2
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           files: artifacts/setup.exe
           generate_release_notes: true
 
   pages-deploy:
+    name: Deploy ClickOnce feed to Pages
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -87,18 +96,28 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: artifacts
-      - name: Prepare site
+
+      - name: Prepare Pages content (/published)
         run: |
+          set -e
           rm -rf public
           mkdir -p public/published
-          unzip -q artifacts/clickonce.zip -d public/published
+          unzip -o artifacts/clickonce.zip -d public/published
+          # Ensure "Application Files" is served as-is by Pages
           touch public/.nojekyll
-      - uses: actions/upload-pages-artifact@v3
+          # Optional index
+          echo "<h1>SkyCal ClickOnce Feed</h1>" > public/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
-      - id: deployment
+
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
