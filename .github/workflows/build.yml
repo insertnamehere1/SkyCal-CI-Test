@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -69,6 +69,9 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -88,6 +91,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
+          # name defaults to 'github-pages'; setting explicitly is fine too
+          # name: github-pages
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
