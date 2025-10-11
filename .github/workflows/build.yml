@@ -87,12 +87,12 @@ jobs:
         # queries: security-extended,security-and-quality
 
       - name: Restore NuGet packages
-        run: nuget restore YOUR_SOLUTION.sln
+        run: nuget restore "Bahtinov Collimator.sln"
 
     # Build only what CodeQL needs. If your full .sln has vdproj/WiX etc. that break on runners,
     # build the main app project instead of the whole solution.
       - name: Build Release
-        run: msbuild YOUR_SOLUTION.sln /t:Rebuild /p:Configuration=Release /m
+        run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
