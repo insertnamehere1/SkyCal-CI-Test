@@ -24,7 +24,8 @@ jobs:
 
       # IMPORTANT: publish the actual project that has ClickOnce enabled
 
-      - name: ClickOnce Publish (force known output dir)
+      - name: ClickOnce Publish (binlog)
+        if: ${{ always() }}
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
@@ -32,6 +33,7 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+          /bl:artifacts\publish.binlog
 
       # Prove where files went and what got produced
       - name: Inspect publish output
