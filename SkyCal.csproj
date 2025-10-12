@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>https://insertnamehere1.github.io/SkyCal-CI-Test/published/</PublishUrl>
+    <PublishUrl>https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -26,15 +26,15 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://insertnamehere1.github.io/SkyCal-CI-Test/published/</InstallUrl>
-    <UpdateUrl>https://insertnamehere1.github.io/SkyCal-CI-Test/published/</UpdateUrl>
+    <InstallUrl>https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/</UpdateUrl>
     <ProductName>SkyCal Focus and Collimation Tool</ProductName>
     <PublisherName>Chris Dowd</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.3.21.0</ApplicationVersion>
+    <ApplicationVersion>3.3.22.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
