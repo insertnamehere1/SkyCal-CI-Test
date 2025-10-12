@@ -68,4 +68,4 @@
 *.deploy      binary
 *.exe         binary
 *.dll         binary
-Application Files/** binary
+"Application Files"/** binary
