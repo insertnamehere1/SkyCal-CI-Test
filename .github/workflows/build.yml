@@ -29,27 +29,6 @@ jobs:
       - name: Build (Release)
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
-      # Publish the project that has ClickOnce enabled
-      - name: ClickOnce Publish
-        shell: pwsh
-        run: >
-          msbuild "SkyCal.csproj"
-          /t:Publish
-          /p:Configuration=Release
-          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
-          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
-      - name: Stage artifacts
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
-          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: artifacts
-
   version_check:
     name: Detect version change in SkyCal.csproj
     runs-on: ubuntu-latest
@@ -89,8 +68,30 @@ jobs:
     name: Commit ClickOnce payload to master/published
     needs: [build, version_check]
     if: ${{ needs.version_check.outputs.version_changed == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
+      # Publish the project that has ClickOnce enabled
+      - name: ClickOnce Publish
+        shell: pwsh
+        run: >
+          msbuild "SkyCal.csproj"
+          /t:Publish
+          /p:Configuration=Release
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+      - name: Stage artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
+          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: artifacts
+
+      # Publish to Master
       - name: Checkout master (target branch)
         uses: actions/checkout@v4
         with:
