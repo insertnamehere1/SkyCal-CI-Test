@@ -144,7 +144,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            artifacts/clickonce.zip
             artifacts/setup.exe
 
       - name: Update published/ from clickonce.zip
