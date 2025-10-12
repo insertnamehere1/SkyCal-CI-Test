@@ -74,6 +74,9 @@ jobs:
       # Publish the project that has ClickOnce enabled
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+      - name: Checkout source
+        uses: actions/checkout@v4
+      
       - name: ClickOnce Publish
         shell: pwsh
         run: >
