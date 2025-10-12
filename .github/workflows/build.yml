@@ -3,10 +3,10 @@ name: Build, Test, and Release (ClickOnce)
 on:
   push:
     branches: [ master ]
+    tags: ['v*.*.*']   # releases are tag-driven
   pull_request:
     branches: [ master ]
-  push:
-    tags: ['v*.*.*']   # releases are tag-driven
+    
   workflow_dispatch:
 
 permissions:
