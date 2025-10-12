@@ -110,16 +110,16 @@ jobs:
           /t:Publish
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
-          /p:PublishDir="$(Resolve-Path .)\published\"
-          /p:CreateWebPageOnPublish=true
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+          /p:CreateWebPageOnPublish=true 
           /p:WebPageFileName=Publish.htm
            
       - name: Stage artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          if (Test-Path "published\setup.exe") { Copy-Item "published\setup.exe" artifacts\setup.exe -Force }
-          Compress-Archive -Path "published\*" -DestinationPath "artifacts\clickonce.zip" -Force
+          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
+          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -148,6 +148,7 @@ jobs:
           prerelease: false
           files: |
             artifacts/setup.exe
+            artifacts/clickonce.zip
 
 #      - name: Copy Publish.htm to /published
 #        shell: pwsh
@@ -161,14 +162,13 @@ jobs:
 #          if (-not $src) { throw "Publish.htm not found in out\clickonce\" }
 #          Copy-Item $src "published/Publish.htm" -Force
             
-#      - name: Update published/ from clickonce.zip
-#        run: |
-#          $ErrorActionPreference = 'Stop'
-#          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-#          unzip -o artifacts/clickonce.zip -d published
-#          # Ensure Pages serves 'Application Files' folder correctly
-#          touch .nojekyll
- 
+      - name: Update published/ from clickonce.zip
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
+          unzip -o artifacts/clickonce.zip -d published
+          # Ensure Pages serves 'Application Files' folder correctly
+          touch .nojekyll
       - name: Commit and push changes to master
         run: |
           git config user.name "github-actions[bot]"
