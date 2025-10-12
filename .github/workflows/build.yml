@@ -110,8 +110,8 @@ jobs:
           /t:Publish
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
-          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
-          /p:CreateWebPageOnPublish=true 
+          /p:PublishDir="$(Resolve-Path .)\published\"
+          /p:CreateWebPageOnPublish=true
           /p:WebPageFileName=Publish.htm
            
       - name: Stage artifacts
@@ -149,25 +149,26 @@ jobs:
           files: |
             artifacts/setup.exe
 
-      - name: Copy Publish.htm to /published
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          New-Item -ItemType Directory -Force -Path published | Out-Null
-          $src = @(
-            "out\clickonce\Publish.htm",
-            "out\clickonce\Publish.html"
-          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
-          if (-not $src) { throw "Publish.htm not found in out\clickonce\" }
-          Copy-Item $src "published/Publish.htm" -Force
+#      - name: Copy Publish.htm to /published
+#        shell: pwsh
+#        run: |
+#          $ErrorActionPreference = 'Stop'
+#          New-Item -ItemType Directory -Force -Path published | Out-Null
+#          $src = @(
+#            "out\clickonce\Publish.htm",
+#            "out\clickonce\Publish.html"
+#          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+#          if (-not $src) { throw "Publish.htm not found in out\clickonce\" }
+#          Copy-Item $src "published/Publish.htm" -Force
             
-      - name: Update published/ from clickonce.zip
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o artifacts/clickonce.zip -d published
-          # Ensure Pages serves 'Application Files' folder correctly
-          touch .nojekyll
+#      - name: Update published/ from clickonce.zip
+#        run: |
+#          $ErrorActionPreference = 'Stop'
+#          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
+#          unzip -o artifacts/clickonce.zip -d published
+#          # Ensure Pages serves 'Application Files' folder correctly
+#          touch .nojekyll
+ 
       - name: Commit and push changes to master
         run: |
           git config user.name "github-actions[bot]"
