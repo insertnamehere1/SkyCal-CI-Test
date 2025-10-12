@@ -146,6 +146,18 @@ jobs:
           files: |
             artifacts/setup.exe
 
+      - name: Copy publish.htm to /published
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path published | Out-Null
+          $src = @(
+            "artifacts/publish.htm",
+            "artifact/publish.htm"
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $src) { throw "publish.htm not found in artifacts/ or artifact/" }
+          Copy-Item $src "published/publish.htm" -Force
+            
       - name: Update published/ from clickonce.zip
         run: |
           $ErrorActionPreference = 'Stop'
