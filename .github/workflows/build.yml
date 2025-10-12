@@ -146,17 +146,17 @@ jobs:
           files: |
             artifacts/setup.exe
 
-      - name: Copy publish.htm to /published
+      - name: Copy Publish.htm to /published
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force -Path published | Out-Null
           $src = @(
-            "artifacts/publish.htm",
-            "artifact/publish.htm"
+            "artifacts/Publish.htm",
+            "artifact/Publish.htm"
           ) | Where-Object { Test-Path $_ } | Select-Object -First 1
-          if (-not $src) { throw "publish.htm not found in artifacts/ or artifact/" }
-          Copy-Item $src "published/publish.htm" -Force
+          if (-not $src) { throw "Publish.htm not found in artifacts/ or artifact/" }
+          Copy-Item $src "published/Publish.htm" -Force
             
       - name: Update published/ from clickonce.zip
         run: |
