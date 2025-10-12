@@ -72,6 +72,8 @@ jobs:
     runs-on: windows-latest
     steps:
       # Publish the project that has ClickOnce enabled
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
       - name: ClickOnce Publish
         shell: pwsh
         run: >
