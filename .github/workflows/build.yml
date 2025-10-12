@@ -116,7 +116,8 @@ jobs:
 
       - name: Update published/ from clickonce.zip
         run: |
-          set -e
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
           unzip -o artifacts/clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
