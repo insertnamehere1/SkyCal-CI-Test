@@ -72,9 +72,7 @@ jobs:
       - name: Update published/ from clickonce.zip
         run: |
           set -e
-          rm -rf published
-          mkdir -p published
-          unzip -q artifacts/clickonce.zip -d published
+          unzip -o artifacts/clickonce.zip -d published
           # Optional: add a simple index page
           echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/index.html
           # Ensure Pages serves 'Application Files' folder correctly
