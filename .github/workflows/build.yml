@@ -118,8 +118,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
-          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
+          if (Test-Path "published\setup.exe") { Copy-Item "published\setup.exe" artifacts\setup.exe -Force }
+          Compress-Archive -Path "published\*" -DestinationPath "artifacts\clickonce.zip" -Force
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
