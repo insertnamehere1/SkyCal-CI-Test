@@ -107,11 +107,7 @@ jobs:
       - name: Update published/ from clickonce.zip
         run: |
           set -e
-          rm -rf published
-          mkdir -p published
-          unzip -q artifacts/clickonce.zip -d published
-          # Optional: add a simple index page
-          echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/index.html
+          unzip -o artifacts/clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
       - name: Commit and push changes to master
