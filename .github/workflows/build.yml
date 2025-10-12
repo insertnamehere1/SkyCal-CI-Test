@@ -50,9 +50,45 @@ jobs:
           name: build-output
           path: artifacts
 
+  version_check:
+    name: Detect version change in SkyCal.csproj
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.diff.outputs.version_changed }}
+      before_version: ${{ steps.diff.outputs.before_version }}
+      after_version:  ${{ steps.diff.outputs.after_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compare version in SkyCal.csproj (HEAD vs HEAD^)
+        id: diff
+        shell: bash
+        run: |
+          set -e
+
+          # Extract version from current commit
+          cur=$(git show HEAD:SkyCal.csproj | tr -d '\r' \
+            | sed -nE 's/.*<(Version|AssemblyVersion)>([^<]+)<\/(Version|AssemblyVersion)>.*/\2/p' | head -n1 || true)
+
+          # Extract version from previous commit (may be empty if file new)
+          prev=$(git show HEAD^:SkyCal.csproj 2>/dev/null | tr -d '\r' \
+            | sed -nE 's/.*<(Version|AssemblyVersion)>([^<]+)<\/(Version|AssemblyVersion)>.*/\2/p' | head -n1 || true)
+
+          changed=false
+          if [ -n "$cur" ] && [ "$cur" != "$prev" ]; then
+            changed=true
+          fi
+
+          echo "version_changed=$changed" >> $GITHUB_OUTPUT
+          echo "before_version=$prev"     >> $GITHUB_OUTPUT
+          echo "after_version=$cur"       >> $GITHUB_OUTPUT
   release:
     name: Commit ClickOnce payload to master/published
-    needs: build
+    needs: [build, version_check]
+    if: ${{ needs.version_check.outputs.version_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master (target branch)
