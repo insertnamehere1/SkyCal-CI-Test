@@ -37,12 +37,8 @@ jobs:
     steps:
       - name: ClickOnce Publish
         shell: pwsh
-        run: >
-          msbuild "SkyCal.csproj"
-          /t:Publish
-          /p:Configuration=Release
-          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
-          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+        run: |
+          msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml" /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
       - name: Stage artifacts
         shell: pwsh
         run: |
