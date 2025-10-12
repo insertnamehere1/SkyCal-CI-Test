@@ -46,24 +46,46 @@ jobs:
         id: diff
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
 
-          # Extract version from current commit
-          cur=$(git show HEAD:SkyCal.csproj | tr -d '\r' \
-            | sed -nE 's/.*<(Version|AssemblyVersion)>([^<]+)<\/(Version|AssemblyVersion)>.*/\2/p' | head -n1 || true)
+          # 1) Find the csproj path case-insensitively, prefer one ending in SkyCal.csproj
+          proj="$(git ls-files | awk 'tolower($0) ~ /skycal\.csproj$/ {print; exit}')"
+          if [ -z "${proj:-}" ]; then
+            proj="$(git ls-files | awk 'tolower($0) ~ /\.csproj$/ {print; exit}')"
+          fi
+          if [ -z "${proj:-}" ]; then
+            echo "Could not locate a .csproj file in repo." >&2
+            echo "version_changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
-          # Extract version from previous commit (may be empty if file new)
-          prev=$(git show HEAD^:SkyCal.csproj 2>/dev/null | tr -d '\r' \
-            | sed -nE 's/.*<(Version|AssemblyVersion)>([^<]+)<\/(Version|AssemblyVersion)>.*/\2/p' | head -n1 || true)
+          # 2) Function to extract a version from a commit:path, trying multiple tags
+          get_ver () {
+            local refpath="$1"
+            # Try common tags in order of likelihood
+            local tags='Version|ApplicationVersion|AssemblyVersion|FileVersion'
+            git show "$refpath" 2>/dev/null \
+              | tr -d '\r' \
+              | sed -nE "s@.*<(${tags})>([^<]+)</(${tags})>.*@\\2@p" \
+              | head -n1 \
+              || true
+          }
 
+          # 3) Current and previous versions
+          cur="$(get_ver "HEAD:${proj}")"
+          prev="$(get_ver "HEAD^:${proj}")" || true
+
+          # If HEAD^ doesn't exist (e.g. very first commit), prev stays empty
           changed=false
           if [ -n "$cur" ] && [ "$cur" != "$prev" ]; then
             changed=true
           fi
 
-          echo "version_changed=$changed" >> $GITHUB_OUTPUT
-          echo "before_version=$prev"     >> $GITHUB_OUTPUT
-          echo "after_version=$cur"       >> $GITHUB_OUTPUT
+          echo "version_changed=$changed"   >> "$GITHUB_OUTPUT"
+          echo "before_version=${prev:-}"   >> "$GITHUB_OUTPUT"
+          echo "after_version=${cur:-}"     >> "$GITHUB_OUTPUT"
+          echo "Detected project file: $proj"
+          echo "Prev: '${prev:-<none>}'  Cur: '${cur:-<none>}'"
           
   release:
     name: ClickOnce Deploy
