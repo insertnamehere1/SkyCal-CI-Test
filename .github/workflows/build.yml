@@ -30,12 +30,12 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       # Publish the project that has ClickOnce enabled
-release:  
-  needs: build
-  runs-on: windows-latest
-  name: ClickOnce build
-  steps:
-    - name: ClickOnce Publish
+  release:  
+    needs: build
+    runs-on: windows-latest
+    name: ClickOnce build
+    steps:
+      - name: ClickOnce Publish
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
