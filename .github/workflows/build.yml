@@ -33,7 +33,7 @@ jobs:
       - name: ClickOnce Publish
         shell: pwsh
         run: >
-          msbuild "SkyCal.csproj"
+          msbuild "SkyCal\SkyCal.csproj"
           /t:Publish
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
@@ -72,6 +72,18 @@ jobs:
       - name: Update published/ from clickonce.zip
         run: |
           set -e
-          unzip -o artifacts/clickonce.zip -d published
+          rm -rf published
+          mkdir -p published
+          unzip -q artifacts/clickonce.zip -d published
+          # Optional: add a simple index page
+          echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/index.html
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
+
+      - name: Commit and push changes to master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update ClickOnce feed in /published [skip ci]" || echo "No changes to commit"
+          git push origin master
