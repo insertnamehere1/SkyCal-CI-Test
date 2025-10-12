@@ -111,6 +111,9 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+          /p:CreateWebPageOnPublish=true 
+          /p:WebPageFileName=Publish.htm
+           
       - name: Stage artifacts
         shell: pwsh
         run: |
