@@ -152,10 +152,10 @@ jobs:
           $ErrorActionPreference = 'Stop'
           New-Item -ItemType Directory -Force -Path published | Out-Null
           $src = @(
-            "artifacts/Publish.htm",
-            "artifact/Publish.htm"
+            "bin\Release\app.publish\Publish.htm",
+            "bin\Release\app.publish\Publish.html"
           ) | Where-Object { Test-Path $_ } | Select-Object -First 1
-          if (-not $src) { throw "Publish.htm not found in artifacts/ or artifact/" }
+          if (-not $src) { throw "Publish.htm not found in bin\Release\app.publish\" }
           Copy-Item $src "published/Publish.htm" -Force
             
       - name: Update published/ from clickonce.zip
