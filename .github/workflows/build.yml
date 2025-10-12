@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Build (Windows)
+    name: Build & ClickOnce Publish (Windows)
     runs-on: windows-latest
     steps:
       - name: Checkout source
@@ -30,14 +30,14 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
       # Publish the project that has ClickOnce enabled
-  release:  
-    needs: build
-    runs-on: windows-latest
-    name: ClickOnce build
-    steps:
       - name: ClickOnce Publish
         shell: pwsh
-        run: msbuild "SkyCal.csproj" /t:Publish /p:Configuration=Release /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml" /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+        run: >
+          msbuild "SkyCal.csproj"
+          /t:Publish
+          /p:Configuration=Release
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
       - name: Stage artifacts
         shell: pwsh
         run: |
@@ -50,10 +50,10 @@ jobs:
           name: build-output
           path: artifacts
 
-  publish:
-    needs: release
+  release:
+    name: Commit ClickOnce payload to master/published
+    needs: build
     runs-on: ubuntu-latest
-    name: Publish
     steps:
       - name: Checkout master (target branch)
         uses: actions/checkout@v4
