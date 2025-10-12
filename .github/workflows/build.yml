@@ -109,7 +109,7 @@ jobs:
           msbuild "SkyCal.csproj"
           /t:Publish
           /p:Configuration=Release
-          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishProfile="SkyCal.csproj"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
       - name: Stage artifacts
         shell: pwsh
