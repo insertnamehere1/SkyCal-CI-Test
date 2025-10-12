@@ -1,106 +1,77 @@
-name: ClickOnce Build and Deploy
+name: Build & Publish ClickOnce to master/published
 
 on:
   push:
-    tags:
-      - "v*"         # run on version tags like v1.2.3
-  workflow_dispatch:  # allow manual runs
+    branches: [ master ]
+    tags: ['v*.*.*']     # optional: create releases on tags if you keep a release job
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to commit to master
 
 jobs:
   build:
+    name: Build & ClickOnce Publish (Windows)
     runs-on: windows-latest
-
-    env:
-      SOLUTION_PATH: "Bahtinov Collimator.sln"            # set this
-      PROJECT_PATH: SkyCal.csproj   # set this
-      PUBLISH_ROOT: artifacts/clickonce
-
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Setup NuGet
+      - name: Set up NuGet
         uses: NuGet/setup-nuget@v2
 
-      - name: Restore
-        run: nuget restore $env:SOLUTION_PATH
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-      # Optional: if you sign ClickOnce manifests, import the PFX
-      # - name: Import code signing cert
-      #   if: ${{ secrets.CLICKONCE_PFX && secrets.CLICKONCE_PFX_PASSWORD }}
-      #   shell: pwsh
-      #   run: |
-      #     $pfx = "${{ runner.temp }}\signing.pfx"
-      #     [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String("${{ secrets.CLICKONCE_PFX }}"))
-      #     certutil -f -p "${{ secrets.CLICKONCE_PFX_PASSWORD }}" -importpfx $pfx NoRoot
+      - name: Restore
+        run: nuget restore "Bahtinov Collimator.sln"
 
       - name: Build (Release)
-        run: msbuild $env:SOLUTION_PATH /t:Build /p:Configuration=Release /m
+        run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
-      - name: Publish ClickOnce
+      # Publish the project that has ClickOnce enabled
+      - name: ClickOnce Publish
+        shell: pwsh
         run: >
-          msbuild $env:PROJECT_PATH /t:Publish /p:Configuration=Release
-          /p:PublishProtocol=ClickOnce
-          /p:PublishDir="$env:PUBLISH_ROOT\"
-          /p:PublishUrl="$env:PUBLISH_ROOT\"
-          /p:InstallUrl="$env:INSTALL_URL"
-          /p:IsWebBootstrapper=true
+          msbuild "SkyCal.csproj"
+          /t:Publish
+          /p:Configuration=Release
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
 
-      - name: Package artifact
+      - name: Stage artifacts
         shell: pwsh
         run: |
-          Compress-Archive -Path "$env:PUBLISH_ROOT\*" -DestinationPath "$env:RUNNER_TEMP\clickonce.zip"
-        # Upload the artifact so a later job can deploy it
-      - name: Upload artifact
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
+          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: clickonce
-          path: ${{ runner.temp }}\clickonce.zip
+          name: build-output
+          path: artifacts
 
-  # ===== OPTION B: Commit to master:/published =====
-  deploy_master_published:
+  publish_to_master:
+    name: Commit ClickOnce payload to master/published
     needs: build
-    runs-on: windows-latest
-    if: always()
-    permissions:
-      contents: write
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
+      - name: Checkout master (target branch)
         uses: actions/checkout@v4
         with:
           ref: master
+          fetch-depth: 0
 
-      - name: Download artifact
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: clickonce
-          path: ${{ runner.temp }}
+          name: build-output
+          path: artifacts
 
-      - name: Ensure published folder exists
-        shell: pwsh
+      - name: Update published/ from clickonce.zip
         run: |
-          New-Item -ItemType Directory -Force -Path published | Out-Null
-
-      - name: Unzip artifact into published/ (overwrite)
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path published | Out-Null
-          Expand-Archive -Path "$env:RUNNER_TEMP\clickonce.zip" -DestinationPath "published" -Force -ErrorAction Stop
-
-      - name: Commit and push
-        shell: pwsh
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git add published
-          if (git diff --cached --quiet) {
-            Write-Host "No changes to commit."
-          } else {
-            $msg = "Deploy ClickOnce: ${{ github.run_number }} on $((Get-Date).ToString('u'))"
-            git commit -m "$msg"
-            git push origin master
-          }
+          set -e
+          unzip -o artifacts/clickonce.zip -d published
+          # Ensure Pages serves 'Application Files' folder correctly
+          touch .nojekyll
