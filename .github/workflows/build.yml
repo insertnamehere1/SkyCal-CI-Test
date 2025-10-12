@@ -1,20 +1,21 @@
-name: Build & Publish ClickOnce on Release
+name: Build & Publish ClickOnce to master/published
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ master ]
+    tags: ['v*.*.*']     # optional: create releases on tags if you keep a release job
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write   # needed to commit to master
 
 jobs:
-  build_and_publish:
+  build:
+    name: Build & ClickOnce Publish (Windows)
     runs-on: windows-latest
     steps:
-      - name: Checkout source at release tag
+      - name: Checkout source
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }}
 
       - name: Set up NuGet
         uses: NuGet/setup-nuget@v2
@@ -28,6 +29,7 @@ jobs:
       - name: Build (Release)
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /m
 
+      # Publish the project that has ClickOnce enabled
       - name: ClickOnce Publish
         shell: pwsh
         run: >
@@ -36,34 +38,49 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
-
-      - name: Package ClickOnce output
+      - name: Stage artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
           if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
           Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\clickonce.zip" -Force
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: artifacts
 
-      - name: Checkout master into subfolder
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Commit ClickOnce payload to master/published
+    steps:
+      - name: Checkout master (target branch)
         uses: actions/checkout@v4
         with:
           ref: master
-          path: repo-master
           fetch-depth: 0
 
-      - name: Update repo-master/published from clickonce.zip
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path "repo-master\published" | Out-Null
-          Expand-Archive -Path "artifacts\clickonce.zip" -DestinationPath "repo-master\published" -Force
-          New-Item -ItemType File -Path "repo-master\.nojekyll" -Force | Out-Null
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: artifacts
 
-      - name: Commit and push to master
-        shell: pwsh
+      - name: Update published/ from clickonce.zip
         run: |
-          Set-Location repo-master
+          set -e
+          rm -rf published
+          mkdir -p published
+          unzip -q artifacts/clickonce.zip -d published
+          # Optional: add a simple index page
+          echo "<h1>SkyCal Downloads</h1><p>ClickOnce manifests live in /published</p>" > published/index.html
+          # Ensure Pages serves 'Application Files' folder correctly
+          touch .nojekyll
+      - name: Commit and push changes to master
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Update ClickOnce feed in /published from release ${{ github.event.release.tag_name }} [skip ci]" || echo "No changes to commit"
+          git commit -m "Update ClickOnce feed in /published [skip ci]" || echo "No changes to commit"
           git push origin master
