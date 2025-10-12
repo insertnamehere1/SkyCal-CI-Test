@@ -64,6 +64,7 @@ jobs:
           echo "version_changed=$changed" >> $GITHUB_OUTPUT
           echo "before_version=$prev"     >> $GITHUB_OUTPUT
           echo "after_version=$cur"       >> $GITHUB_OUTPUT
+          
   release:
     name: Commit ClickOnce payload to master/published
     needs: [build, version_check]
