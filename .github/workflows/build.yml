@@ -136,6 +136,17 @@ jobs:
           name: build-output
           path: artifacts
 
+      - name: Publish GitHub Release with assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.version_check.outputs.after_version }}
+          name: SkyCal v${{ needs.version_check.outputs.after_version }}
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/clickonce.zip
+            artifacts/setup.exe
+
       - name: Update published/ from clickonce.zip
         run: |
           $ErrorActionPreference = 'Stop'
