@@ -76,6 +76,8 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       - name: Checkout source
         uses: actions/checkout@v4
+      - name: Set up NuGet
+        uses: NuGet/setup-nuget@v2
       
       - name: ClickOnce Publish
         shell: pwsh
