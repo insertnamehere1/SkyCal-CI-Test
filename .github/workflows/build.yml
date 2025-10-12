@@ -56,7 +56,7 @@ jobs:
           prev=$(git show HEAD^:SkyCal.csproj 2>/dev/null | tr -d '\r' \
             | sed -nE 's/.*<(Version|AssemblyVersion)>([^<]+)<\/(Version|AssemblyVersion)>.*/\2/p' | head -n1 || true)
 
-          changed=true
+          changed=false
           if [ -n "$cur" ] && [ "$cur" != "$prev" ]; then
             changed=true
           fi
