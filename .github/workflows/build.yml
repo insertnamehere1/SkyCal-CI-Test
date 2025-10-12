@@ -112,10 +112,10 @@ jobs:
         uses: NuGet/setup-nuget@v2
 
       - name: Restore packages
-        run: nuget restore SkyCal.sln
+        run: nuget restore "Bahtinov Collimator.sln"
 
       - name: Build solution for analysis
-        run: msbuild SkyCal.sln /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
+        run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
