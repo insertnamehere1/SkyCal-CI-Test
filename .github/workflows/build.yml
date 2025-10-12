@@ -13,9 +13,7 @@ jobs:
     env:
       SOLUTION_PATH: "Bahtinov Collimator.sln"            # set this
       PROJECT_PATH: SkyCal.csproj   # set this
-      PUBLISH_ROOT: ${{ github.workspace }}\clickonce
-      # If hosting on GitHub Pages, set your public install URL:
-      INSTALL_URL: https://insertnamehere1.github.io/SkyCal-CI-Test/
+      PUBLISH_ROOT: artifacts/clickonce
 
     steps:
       - name: Checkout
