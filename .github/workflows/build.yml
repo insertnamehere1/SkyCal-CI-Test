@@ -165,6 +165,7 @@ jobs:
             dist/SkyCal-setup.exe
 
       - name: Update published/ from clickonce.zip
+        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
