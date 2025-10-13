@@ -169,7 +169,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o artifacts/SkyCal-clickonce.zip -d published
+          unzip -o dist/SkyCal-clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
           
@@ -179,6 +179,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Update ClickOnce feed in /published [skip ci]" -q || echo "No changes to commit"
+          git commit -m "Update ClickOnce feed in /published" -q || echo "No changes to commit"
           git push origin master
 
