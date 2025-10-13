@@ -165,12 +165,13 @@ jobs:
             dist/SkyCal-setup.exe
 
       - name: Update published/ from clickonce.zip
-        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          Expand-Archive -Path "dist/SkyCal-clickonce.zip" -DestinationPath "published" -Force
-          New-Item -ItemType File -Path ".nojekyll" -Force | Out-Null
-
+          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
+          unzip -o artifacts/clickonce.zip -d published
+          # Ensure Pages serves 'Application Files' folder correctly
+          touch .nojekyll
+          
       - name: Commit and push changes to master
         shell: pwsh
         run: |
