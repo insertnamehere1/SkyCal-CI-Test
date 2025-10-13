@@ -16,7 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  build:
+  build_Test:
     name: Build & Test (Windows)
     runs-on: windows-latest
     steps:
@@ -41,10 +41,6 @@ jobs:
 
       - name: Restore packages
         run: nuget restore SkyCal.sln
-
-      # Optional: enforce analyzers from your .csproj (NetAnalyzers or StyleCop)
-       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-       <AnalysisMode>AllEnabledByDefault</AnalysisMode>
 
       - name: Build Release
         run: >
