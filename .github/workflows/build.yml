@@ -40,11 +40,11 @@ jobs:
             nuget-${{ runner.os }}-
 
       - name: Restore packages
-        run: nuget restore SkyCal.sln
+        run: nuget restore "Bahtinov Collimator.sln"
 
       - name: Build Release
         run: >
-          msbuild SkyCal.sln
+          msbuild "Bahtinov Collimator.sln"
           /t:Rebuild
           /p:Configuration=Release
           /p:Deterministic=true
