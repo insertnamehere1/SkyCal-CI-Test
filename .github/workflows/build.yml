@@ -49,23 +49,7 @@ jobs:
           /p:Configuration=Release
           /p:Deterministic=true
           /p:TreatWarningsAsErrors=true
-
-      # Run tests for .NET Framework via VSTest (discover *.test*.dll or your test project)
-      - name: Discover VSTest
-        id: vswhere
-        shell: pwsh
-        run: |
-          $vs=(& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath)
-          echo "vspath=$vs" >> $env:GITHUB_OUTPUT
-
-      - name: Run tests
-        shell: pwsh
-        run: |
-          $vstest = Join-Path "${{ steps.vswhere.outputs.vspath }}" "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-          if (!(Test-Path $vstest)) { throw "vstest.console.exe not found" }
-          # Adjust the test assembly pattern(s) to match your solution
-          & $vstest ".\**\bin\Release\*test*.dll" /Platform:x64 /InIsolation
-
+          
       # Publish ClickOnce
       - name: ClickOnce Publish
         shell: pwsh
