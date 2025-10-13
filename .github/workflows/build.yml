@@ -16,7 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  build-test:
+  build:
     name: Build & Test (Windows)
     runs-on: windows-latest
     steps:
