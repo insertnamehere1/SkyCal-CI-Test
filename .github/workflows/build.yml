@@ -173,12 +173,35 @@ jobs:
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
           
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}  # needed to push back
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist
+
+      - name: Sync dist → published/
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path published | Out-Null
+          # Mirror files from dist to published (robocopy returns 1..3 for success-ish)
+          robocopy dist published /MIR
+          if ($LASTEXITCODE -gt 3) { exit $LASTEXITCODE }
+
       - name: Commit and push changes to master
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Update ClickOnce feed in /published" -q || echo "No changes to commit"
+          # add [skip ci] to avoid retriggering the workflow on this bot commit
+          git commit -m "Update ClickOnce feed in /published [skip ci]" -q || powershell -c "Write-Host 'No changes to commit'; exit 0"
           git push origin master
 
