@@ -16,7 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  build_Test:
+  build_test:
     name: Build & Test (Windows)
     runs-on: windows-latest
     steps:
@@ -117,7 +117,8 @@ jobs:
     name: Release (tag only)
     needs: [build_test]
     if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -126,9 +127,13 @@ jobs:
           path: dist
 
       - name: Checksums
+        shell: pwsh
         run: |
           cd dist
-          sha256sum * > SHA256SUMS.txt
+          Get-ChildItem * | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash
+            "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
+          }
 
       - name: SBOM (SPDX)
         uses: anchore/sbom-action@v0
@@ -158,18 +163,20 @@ jobs:
           subject-path: |
             dist/SkyCal-clickonce.zip
             dist/SkyCal-setup.exe
-            
+
       - name: Update published/ from clickonce.zip
+        shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o artifacts/clickonce.zip -d published
-          # Ensure Pages serves 'Application Files' folder correctly
-          touch .nojekyll
+          Expand-Archive -Path "dist/SkyCal-clickonce.zip" -DestinationPath "published" -Force
+          New-Item -ItemType File -Path ".nojekyll" -Force | Out-Null
+
       - name: Commit and push changes to master
+        shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Update ClickOnce feed in /published [skip ci]" || echo "No changes to commit"
+          git commit -m "Update ClickOnce feed in /published [skip ci]" -q || echo "No changes to commit"
           git push origin master
+
