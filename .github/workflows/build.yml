@@ -170,10 +170,15 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o dist/SkyCal-clickonce.zip -d published
-          # Ensure Pages serves 'Application Files' folder correctly
-          touch .nojekyll
+          # Clean existing published/ so removed files are detected as deletions
+          if (Test-Path published) { Remove-Item -Recurse -Force published }
+          New-Item -ItemType Directory -Force -Path published | Out-Null
+
+          # Use PowerShell's extractor on Windows
+          Expand-Archive -Path "dist/SkyCal-clickonce.zip" -DestinationPath "published" -Force
+
+          # Ensure Pages serves 'Application Files' correctly
+          New-Item -ItemType File -Path .nojekyll -Force | Out-Null
          
       - name: Commit and push changes to master
         run: |
@@ -183,4 +188,4 @@ jobs:
           git add -f published .nojekyll
           git commit -m "Update ClickOnce feed in /published" || echo "No changes to commit"
           git push origin master
-
+          
