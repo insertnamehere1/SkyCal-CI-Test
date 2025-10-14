@@ -163,18 +163,22 @@ jobs:
           subject-path: |
             dist/SkyCal-clickonce.zip
             dist/SkyCal-setup.exe
-            
-      - name: Checkout default branch
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.repository.default_branch }}  # e.g. master or main
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: dist
+
+
+
+           
+#      - name: Checkout default branch
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#          ref: ${{ github.event.repository.default_branch }}  # e.g. master or main
+
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: build-output
+#          path: dist
 
       - name: Update published/ from clickonce.zip
         shell: pwsh
@@ -185,23 +189,34 @@ jobs:
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
 
-      - name: Commit and push changes to default branch
-        shell: pwsh
-        env:
-          TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+          
+      - name: Commit and push changes to master
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Optional: silence LF→CRLF noise for generated files
-          git config core.autocrlf false
-
           git add -A
+          git commit -m "Update ClickOnce feed in /published" || echo "No changes to commit"
+          git push origin master
+          
 
-          # Skip if nothing staged
-          git diff --cached --quiet && echo "No changes to commit" && exit 0
+#      - name: Commit and push changes to default branch
+#        shell: pwsh
+#        env:
 
-          git commit -m "Update ClickOnce feed in /published [skip ci]"
+#        TARGET_BRANCH: ${{ github.event.repository.default_branch }}
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Push current HEAD to the branch, even if we are not on that branch locally
-          git push origin HEAD:refs/heads/$env:TARGET_BRANCH
+#          # Optional: silence LF→CRLF noise for generated files
+#          git config core.autocrlf false
+
+#          git add -A
+
+#          # Skip if nothing staged
+#          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+#          git commit -m "Update ClickOnce feed in /published [skip ci]"
+
+#          # Push current HEAD to the branch, even if we are not on that branch locally
+#          git push origin HEAD:refs/heads/$env:TARGET_BRANCH
