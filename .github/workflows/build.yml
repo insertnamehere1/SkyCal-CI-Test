@@ -181,7 +181,7 @@ jobs:
           if (Test-Path published) { Remove-Item -Recurse -Force published }
           New-Item -ItemType Directory -Force -Path published | Out-Null
 
-          Expand-Archive -Path $zip.FullName -DestinationPath "published" -tiken
+          Expand-Archive -Path $zip.FullName -DestinationPath "published" -Force
 
           # Ensure Pages serves 'Application Files'
           New-Item -ItemType File -Path .nojekyll -Force | Out-Null
