@@ -165,8 +165,6 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
-          persist-credentials: true           # ← added
-          token: ${{ secrets.GITHUB_TOKEN }}  # ← added
 
       - name: Update published/ from clickonce.zip
         shell: pwsh
@@ -181,7 +179,7 @@ jobs:
           if (Test-Path published) { Remove-Item -Recurse -Force published }
           New-Item -ItemType Directory -Force -Path published | Out-Null
 
-          Expand-Archive -Path $zip.FullName -DestinationPath "published" -Force
+          Expand-Archive -Path $zip.FullName -DestinationPath "published" -tiken
 
           # Ensure Pages serves 'Application Files'
           New-Item -ItemType File -Path .nojekyll -Force | Out-Null
