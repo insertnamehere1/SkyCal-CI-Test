@@ -172,23 +172,11 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-
-          # Find the downloaded zip (adjust 'dist' only if your download step uses a different path)
-          $zip = Get-ChildItem -Path "dist" -Filter *clickonce*.zip -File -ErrorAction Stop | Select-Object -First 1
-          if (-not $zip) { throw "No *clickonce*.zip found under dist" }
-
-          # Clean published so deletions are detected
           if (Test-Path published) { Remove-Item -Recurse -Force published }
           New-Item -ItemType Directory -Force -Path published | Out-Null
-
-          Expand-Archive -Path $zip.FullName -DestinationPath "published" -Force
-
-          # Ensure Pages serves 'Application Files'
+          Expand-Archive -Path "dist/SkyCal-clickonce.zip" -DestinationPath "published" -Force
           New-Item -ItemType File -Path .nojekyll -Force | Out-Null
-
-          # Sanity: show what changed on disk (does not alter repo)
           git status --porcelain
-          Get-ChildItem -Recurse -File published | Select-Object FullName,Length | Out-String | Write-Host
 
          
       - name: Commit and push changes to master
