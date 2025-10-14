@@ -74,9 +74,6 @@ jobs:
           name: build-output
           path: artifacts/
 
-
-
-
   codeql:
     name: CodeQL (C# .NET Framework)
     runs-on: windows-latest
@@ -108,10 +105,6 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-
-
-
-          
 
   release:
     name: Release (tag only)
@@ -164,26 +157,12 @@ jobs:
             dist/SkyCal-clickonce.zip
             dist/SkyCal-setup.exe
 
-
       # Publish to Master
       - name: Checkout master (target branch)
         uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 0
-
-           
-#      - name: Checkout default branch
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#          ref: ${{ github.event.repository.default_branch }}  # e.g. master or main
-
-#      - name: Download build artifacts
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: build-output
-#          path: dist
 
       - name: Update published/ from clickonce.zip
         shell: pwsh
@@ -193,8 +172,7 @@ jobs:
           unzip -o dist/SkyCal-clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
-
-          
+         
       - name: Commit and push changes to master
         run: |
           git config user.name "github-actions[bot]"
@@ -202,26 +180,4 @@ jobs:
           git add -A
           git commit -m "Update ClickOnce feed in /published" || echo "No changes to commit"
           git push origin master
-          
 
-#      - name: Commit and push changes to default branch
-#        shell: pwsh
-#        env:
-
-#        TARGET_BRANCH: ${{ github.event.repository.default_branch }}
-#        run: |
-#          git config user.name "github-actions[bot]"
-#          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-#          # Optional: silence LF→CRLF noise for generated files
-#          git config core.autocrlf false
-
-#          git add -A
-
-#          # Skip if nothing staged
-#          git diff --cached --quiet && echo "No changes to commit" && exit 0
-
-#          git commit -m "Update ClickOnce feed in /published [skip ci]"
-
-#          # Push current HEAD to the branch, even if we are not on that branch locally
-#          git push origin HEAD:refs/heads/$env:TARGET_BRANCH
