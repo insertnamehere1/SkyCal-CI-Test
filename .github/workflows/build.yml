@@ -161,12 +161,12 @@ jobs:
             dist/SHA256SUMS.txt
             dist/sbom.spdx.json
 
-      - name: Attest build provenance
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-path: |
-            dist/SkyCal-clickonce.zip
-            dist/SkyCal-setup.exe
+#      - name: Attest build provenance
+#        uses: actions/attest-build-provenance@v1
+#        with:
+#          subject-path: |
+#            dist/SkyCal-clickonce.zip
+#            dist/SkyCal-setup.exe
 
       # Publish to Master
       - name: Checkout master (target branch)
