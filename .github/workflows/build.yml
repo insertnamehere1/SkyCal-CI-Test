@@ -132,12 +132,12 @@ jobs:
 
 
 
-      # Publish to Master
-      - name: Checkout master (target branch)
-        uses: actions/checkout@v4
-        with:
-          ref: master
-          fetch-depth: 0
+#      # Publish to Master
+#      - name: Checkout master (target branch)
+#        uses: actions/checkout@v4
+#        with:
+#          ref: master
+#          fetch-depth: 0
 
 
       - name: Update published/ from clickonce.zip
