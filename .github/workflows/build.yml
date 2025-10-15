@@ -130,43 +130,7 @@ jobs:
           name: build-output-${{ github.run_number }} 
           path: dist
 
-      - name: Checksums
-        shell: pwsh
-        run: |
-          cd dist
-          Get-ChildItem * | ForEach-Object {
-            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash
-            "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
-          }
 
-      - name: SBOM (SPDX)
-        uses: anchore/sbom-action@v0
-        with:
-          path: .
-          format: spdx-json
-          output-file: sbom.spdx.json
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: SkyCal ${{ github.ref_name }}
-          body: |
-            Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-          files: |
-            dist/BUILD-METADATA.txt
-            dist/SkyCal-clickonce.zip
-            dist/SkyCal-setup.exe
-            dist/SHA256SUMS.txt
-            dist/sbom.spdx.json
-
-#      - name: Attest build provenance
-#        uses: actions/attest-build-provenance@v1
-#        with:
-#          subject-path: |
-#            dist/SkyCal-clickonce.zip
-#            dist/SkyCal-setup.exe
 
       # Publish to Master
       - name: Checkout master (target branch)
@@ -199,6 +163,48 @@ jobs:
       
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
+
+
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          cd dist
+          Get-ChildItem * | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash
+            "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
+          }
+
+      - name: SBOM (SPDX)
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: SkyCal ${{ github.ref_name }}
+          body: |
+            Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+          files: |
+            dist/BUILD-METADATA.txt
+            dist/SkyCal-clickonce.zip
+            dist/SkyCal-setup.exe
+            dist/SHA256SUMS.txt
+            dist/sbom.spdx.json
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            dist/SkyCal-clickonce.zip
+            dist/SkyCal-setup.exe
+
+
 
 
 
