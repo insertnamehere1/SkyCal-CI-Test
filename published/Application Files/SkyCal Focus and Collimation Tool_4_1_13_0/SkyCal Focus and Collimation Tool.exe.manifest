@@ -4,7 +4,7 @@
   <description asmv2:iconFile="focusIcon2.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="4.1.13.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="4.1.22.0" language="neutral" processorArchitecture="msil" />
     <commandLine file="SkyCal Focus and Collimation Tool.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -56,13 +56,13 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SkyCal Focus and Collimation Tool.exe" size="8224768">
-      <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="4.1.13.0" language="neutral" processorArchitecture="msil" />
+      <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="4.1.22.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>9x0tFrL2F6m0HfjTY/4rJq6pfSwef9kMCeP5oUMe5rM=</dsig:DigestValue>
+        <dsig:DigestValue>tNS7JorWhd6VHvpdsTcI6CgPbVu6n3llo9hQJ3IL3Oc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
