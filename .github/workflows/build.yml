@@ -71,7 +71,7 @@ jobs:
       - name: Upload CI artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.run_number }} 
           path: artifacts/
 
   codeql:
@@ -120,7 +120,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ github.run_number }} 
           path: dist
 
       - name: Checksums
@@ -167,38 +167,15 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
-      
+
       - name: Update published/ from clickonce.zip
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-      
-          # Always work inside the GitHub workspace
-          cd $env:GITHUB_WORKSPACE
-      
-          # Ensure ./published exists and is clean
-          if (Test-Path 'published') { Remove-Item -Recurse -Force 'published' }
-          New-Item -ItemType Directory -Force -Path 'published' | Out-Null
-      
-          # Extract within the repo workspace, forcing relative paths
-          # -d ensures the output goes into ./published
-          # -o overwrites existing files
-          # --junk-paths strips any /published/ prefix from inside the zip
-          unzip -o "$env:GITHUB_WORKSPACE/dist/SkyCal-clickonce.zip" -d "$env:GITHUB_WORKSPACE/published"
-      
+          unzip -o dist/SkyCal-clickonce.zip -d published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
-
-
-#      - name: Update published/ from clickonce.zip
-#        shell: pwsh
-#        run: |
-#          $ErrorActionPreference = 'Stop'
-#          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-#          unzip -o dist/SkyCal-clickonce.zip -d published
-#          # Ensure Pages serves 'Application Files' folder correctly
-#          touch .nojekyll
 
       - name: Debug what changed in published/
         shell: pwsh
