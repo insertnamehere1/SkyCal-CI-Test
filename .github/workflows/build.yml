@@ -128,7 +128,8 @@ jobs:
 
 
 
-      - name: Sync ApplicationVersion + AssemblyInfo from tag
+
+      - name: Sync ApplicationVersion + AssemblyInfo from tag (no new XML nodes)
         if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         run: |
@@ -136,32 +137,28 @@ jobs:
           if ($version -notmatch '^\d+\.\d+\.\d+\.\d+$') { $version = "$version.0" }
           Write-Host "Version from tag: $version"
       
-          # Update SkyCal.csproj <ApplicationVersion> safely via XML APIs
+          # 1) Update SkyCal.csproj: replace only the inner text, keep existing tag + attrs + namespace
           $csproj = 'SkyCal.csproj'
           if (-not (Test-Path $csproj)) { throw "Missing $csproj" }
-          [xml]$xml = Get-Content -Raw $csproj
-          $pg = $xml.Project.PropertyGroup | Select-Object -First 1
-          if (-not $pg) {
-            $pg = $xml.CreateElement('PropertyGroup')
-            $null = $xml.Project.AppendChild($pg)
-          }
-          $node = $pg.SelectSingleNode('ApplicationVersion')
-          if (-not $node) {
-            $node = $xml.CreateElement('ApplicationVersion')
-            $null = $pg.AppendChild($node)
-          }
-          $node.InnerText = $version
-          $xml.Save($csproj)
-          Write-Host "Updated $csproj <ApplicationVersion> to $version"
+          $content = Get-Content -Raw $csproj
+          $pattern = '<ApplicationVersion(?<attrs>[^>]*)>.*?</ApplicationVersion>'
+          if ($content -notmatch $pattern) { throw "ApplicationVersion tag not found in $csproj" }
+          $content = [System.Text.RegularExpressions.Regex]::Replace(
+            $content,
+            $pattern,
+            { param($m) "<ApplicationVersion$($m.Groups['attrs'].Value)>$version</ApplicationVersion>" },
+            [System.Text.RegularExpressions.RegexOptions]::Singleline
+          )
+          Set-Content -Path $csproj -Value $content
       
-          # Update Properties/AssemblyInfo.cs
+          # 2) Update AssemblyInfo.cs versions
           $ai = 'Properties/AssemblyInfo.cs'
           if (-not (Test-Path $ai)) { throw "Missing $ai" }
-          (Get-Content $ai -Raw) `
+          (Get-Content -Raw $ai) `
             -replace '\[assembly:\s*AssemblyVersion\(".*?"\)\]',     "[assembly: AssemblyVersion(`"$version`")]" `
             -replace '\[assembly:\s*AssemblyFileVersion\(".*?"\)\]', "[assembly: AssemblyFileVersion(`"$version`")]" `
             | Set-Content $ai
-          Write-Host "Updated $ai AssemblyVersion and AssemblyFileVersion to $version"
+
 
 
 
