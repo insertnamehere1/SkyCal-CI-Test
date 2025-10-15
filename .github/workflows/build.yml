@@ -187,7 +187,7 @@ jobs:
           Write-Host "Using zip: $($zip.FullName)  (LastWriteTime=$($zip.LastWriteTime))"
           # Optional sanity: fail if the zip is older than this run window (prevents 3-day old artifacts)
           if ($zip.LastWriteTime -lt (Get-Date).AddHours(-2)) { throw "Zip in dist/ looks stale (older than 2h)" }
-          unzip -o -j "$($zip.FullName)" -d "$env:GITHUB_WORKSPACE/published"
+          unzip -o "$($zip.FullName)" -d "$env:GITHUB_WORKSPACE/published"
           # <<< MINIMAL CHANGE END
       
           # Ensure Pages serves 'Application Files' folder correctly
