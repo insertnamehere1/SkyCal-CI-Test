@@ -173,7 +173,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o dist/SkyCal-clickonce.zip -d origin/master/published
+          unzip -o dist/SkyCal-clickonce.zip -d /published
           # Ensure Pages serves 'Application Files' folder correctly
           touch .nojekyll
 
