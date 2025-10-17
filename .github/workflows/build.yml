@@ -58,7 +58,9 @@ jobs:
             -replace '\[assembly:\s*AssemblyFileVersion\(".*?"\)\]', "[assembly: AssemblyFileVersion(`"$version`")]" `
             | Set-Content $ai
 
-
+          git config --global core.safecrlf false
+          git add -A
+          git diff --staged -- . | Write-Host
 
 
           
