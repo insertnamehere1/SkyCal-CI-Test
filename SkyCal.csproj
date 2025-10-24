@@ -30,7 +30,7 @@
     <UpdateUrl>https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/</UpdateUrl>
     <ProductName>SkyCal Focus and Collimation Tool</ProductName>
     <PublisherName>Chris Dowd</PublisherName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <CreateWebPageOnPublish>false</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
@@ -110,12 +110,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>5910F645802AF7EB362B74EAD07AF07F9B149FF0</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>SkyCal_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
