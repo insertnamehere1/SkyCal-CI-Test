@@ -271,6 +271,7 @@ jobs:
           $PSNativeCommandUseErrorActionPreference = $true  # propagate native tool errors
           Copy-Item "dist\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
+          Remove-Item -Recurse -Force "dist"
          
       - name: Commit and push changes to master
         run: |
