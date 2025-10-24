@@ -1,3 +1,0 @@
-@@ Build: 18773312415
-Ref: refs/tags/v3.4.0
-SHA: 0bb48a8b2542eaae55db499de41e01a615b35aca
