@@ -208,13 +208,6 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: dist 
 
-#      - name: Overlay signed files onto dist
-#        shell: pwsh
-#        run: |
-#          if (-not (Test-Path "signed-out")) { throw "signed-out not found" }
-#          if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path dist | Out-Null }
-#          Copy-Item "signed-out\*" "dist" -Recurse -Force
-
       - name: Generate SHA256 sums for dist
         shell: pwsh
         working-directory: dist
