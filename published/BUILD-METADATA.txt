@@ -1,3 +1,3 @@
-@@ Build: 18773898252
-Ref: refs/tags/v3.5.0
-SHA: 8d0816b76a6e3412fad6eb2f08a560dad7df111a
+@@ Build: 18774057235
+Ref: refs/tags/v3.6.0
+SHA: a8aa0a0e55a93010f24ab482e334d3bb04d100e3
