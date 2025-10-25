@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="SkyCal Focus and Collimation Tool.exe" version="5.0.0.0" publicKeyToken="0d226954702320f1" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="focusIcon2.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="5.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="SkyCal Focus and Collimation Tool.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="LocalIntranet" Description="Default rights given to applications on the local intranet" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+             If you want to change the Windows User Account Control level replace the 
+             requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            Specifying requestedExecutionLevel element will disable file and registry virtualization. 
+            Remove this element if your application requires this virtualization for backwards
+            compatibility.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MathNet.Numerics.dll" size="1598808">
+      <assemblyIdentity name="MathNet.Numerics" version="5.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>/y9dQV98nQss/FuBVK/WvenBinkkOdXk6aFFmXnJYd0=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SkyCal Focus and Collimation Tool.exe" size="8233336">
+      <assemblyIdentity name="SkyCal Focus and Collimation Tool" version="5.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>XgBWQUpPRs/kWXUEGBcQltzzUPwfa/ZX88LxXA8cFT8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="focusIcon2.ico" size="105095">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>5Wiq5ngqZQkGbNem65JKAR1YXNjDUpPMzwbpBYBmrfs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\Adjustments.png" size="8453">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>rc+9M/tm7M/CnBxkULFbB8f9P8Odf8vS170QByjTqNI=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\arrow.png" size="32565">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>fxXpZ1Ayv+0GBpNNeOZcp0Z/Y5jMKfdq7pcUuAWTc+M=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\focusIcon2.ico" size="105095">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>5Wiq5ngqZQkGbNem65JKAR1YXNjDUpPMzwbpBYBmrfs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\paypal.png" size="72052">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>wJ3zekG3oGJf618PUf9fmLfOvBuSZXgl/18g1kSmg+Q=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Resources\help.pdf" size="1317775">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>EvmfD4OkTbLQeQg4kMwZflCiH1mvnwKQNVsokjlXD4Y=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SkyCal Focus and Collimation Tool.exe.config" size="2549">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>5wQyGlxzKCn3FCesuYqP+zbHl4A+PW5JBJnQH10rSQg=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SkyCal.logo.png" size="107702">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>W5Gf49v+HutKRBSLBhRDIV/1R+UgIxyRarVh49x1KzQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- A list of the Windows versions that this application has been tested on
+           and is designed to work with. Uncomment the appropriate elements
+           and Windows will automatically select the most compatible environment. -->
+      <!-- Windows Vista -->
+      <!--<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />-->
+      <!-- Windows 7 -->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />-->
+      <!-- Windows 8 -->
+      <!--<supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />-->
+      <!-- Windows 8.1 -->
+      <!--<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />-->
+      <!-- Windows 10 -->
+      <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
+    </application>
+  </compatibility>
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+<publisherIdentity name="CN=Test certificate for 'SkyCal [OSS]'" issuerKeyHash="d29f56fcaa11b8773a0bb2ea6dc508fb84feddef" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>RA1NT1/3N9TKMWFzuRHjR0orUAIno/VlYIaKWeMCePY=</DigestValue></Reference></SignedInfo><SignatureValue>lsQDoNMXspqY70t/I19PknOMOIKq4Aykq/NIkLLq4/4d/3XVjDnXsJlNmYz7rkBDZW7PfMl+CkHvdLLkMFbJmr9cAi6Xuknv6PaJiPlC7hJ/iw42ssyECavJEDa2LPlmsc/L7J7nHBwifXgZklOt1zO5BNSJ2ASxML0dApDMUVYXnIf7xdIEdkHLlCJYiSEWtatQp6Sz7D2+21r4F2bR3uJwtxzBDnDm5/lyyCVmscHrbCSBm0thUqBOrx64eljIzLUPusAVKjtmGPQ1txHQh6TF4L1LH0ShjZRFI0snfO4HyvqZk6O5A0lTcM+XyZh0DxI7FxMoz/hRPjlWiiQd6WpDl/MdhgVagxipftlEuMn7DGFuZFtJqOjqxhKvZSBW+qghODFDU5k0uLJxN4eq/CbeaiteJIy7hkksoUSDhWsPgeEAuqmbsjx67LhO+pUtD3X6m1dhbA0q/oeP0FrcG49WHUg0LdRqgTZB3fNP+7oxcY3XLLdbPDJdEy1gbae+3w5gFRkPgNb+7dk11KB9zL64gnVlW2ulGq3xAbGojkyzU/8JCBdUf8/4y1EMFm++ZfHjzmuP2Uwk+LINdpd6qpnklQjarLlrnrCgRiH4r+ls3LwBgynomg0wpi0KbjHCIc6/KbYqVRcyF+lWpiWC5wZd2T9puk9FVBJ5bPh9YKk=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>uiQzp8mpxn2ZkjPpuAx69hbdhDSELn+UyTKdaXmh108oIe5hvZ1NizQowpQMWVLpxOG8bLq8Gr/ZDZpbomMcP2xKWpncVqy8ajMXj2c/hl8+M/46d6KwbhvpQUwJ9SbRv3SSCdio6D49d2fNTJAKIkoza8aaUuj9d79ag/lxW69VECgEvsiVHz3wTZ1UsH4mNxOsa1uiURy3rEP5mAUVNxDfFS37j+e4rZ46gbojy1rQvV7/xhHU9FKByutDZDb0GUkbaQ54xHHoGMBRbeNT5gd32WS3Z/Uv9eJOYEIwWg9V+m/4YRdljHcmURA+Gt9RsV+IwfmwXFY/254AlhJ5SD+q1oFZ2Q1kqHYsziU9NwhBee6ZerroFkZcui0WNFmtvmehNaDEZF36wdekyFDsSfCDS5Pnsg5ynelbPDOrbzV74b2Dqc9yC+Z3cw5EEeNWNzrPLdqBDsA6enQcArOFxlaVYa4I0SL2xYqygwMBg1RzQ5Tv+fXblOSXCilMoIP7pX00AK677jgXrJ291Zlk3GZ2+eUIvzwFKk8rtu4eD0rEL9vctdqPSaT5r0pRtGyzpjF59i1sJSi+ZMWdNSMAWyWz9ac/cYGkqub2gVmVSETcg2sMS8puDgFMq+0DfiO0cXsmcIjmo1IcT1+43YUcibuu2pcgOjlygx69nFXceiE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="f67802e3598a866065f5a32702502b4a47e311b9736131cad437f75f4f4d0d44" Description="" Url=""><as:assemblyIdentity name="SkyCal Focus and Collimation Tool.exe" version="5.0.0.0" publicKeyToken="0d226954702320f1" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=Test certificate for 'SkyCal [OSS]'</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>5UakauW/2fPaxXLp8i8vbj4LBHpV4S00CW4OBKIX6NA=</DigestValue></Reference></SignedInfo><SignatureValue>XdEiG9v8HhQeU+bsMkQO400FPdHZdQXiwTmWUuTf3bzbMc6EUcm0qTWY36jrzS+vqQgA2KzPhlYf/2O05SX/2CbIMEnvIZ4m/mBYfg+zD63IOQ165qi3zsyUP5THbWgfbZTnBjQ1evhegb9AOlZIJ1dmzgFx6TIXkWiOIyzydH+b5nQCxjm8xI8SVNDVc4luVp8iXoVNV2U80dpomEuoSbeU3jretNUXU4gdaJ4p9/QGBkBdzr5/7I+LX2uInJSuarJmNXHkUY+JMRVkDBspGqMcAQ6KBQzPDouJrGqu5NYXf/Jcj1MU2Kv7Nl4CKlna94XSsYOeE096FpaHCjzwxcn9zwFplbKJwPKhv+Uy+b0GgR/MCMZaJVFFv7Q/LkC8vBJBHu4dReyRKztMFds8lAVZ2cyYQNb6k2J5QHkeLJUV82MOZvUL3qdnWcXPzhxljNX4vPrldMakb5/TZs7OlzVlscdLSPGAISM90tv8OAIWx0yB/Ke+BfVeXHBQBKsHfZ1wHasw5Cbx/juAo0l9Qh465BvQ+ztkepactb/RXV8+YfG5cuNIf0HtdLWo7hfKZ4a9tondrnZ48/wzu2pVay1f3WFy9JoUz69EsTC0cYR9Tz+a5LucFntZ5Vk10tA53mI0UFKD6mlxuLFKOs0TUYcNpq3d1vRtFskc+ovXLFg=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>uiQzp8mpxn2ZkjPpuAx69hbdhDSELn+UyTKdaXmh108oIe5hvZ1NizQowpQMWVLpxOG8bLq8Gr/ZDZpbomMcP2xKWpncVqy8ajMXj2c/hl8+M/46d6KwbhvpQUwJ9SbRv3SSCdio6D49d2fNTJAKIkoza8aaUuj9d79ag/lxW69VECgEvsiVHz3wTZ1UsH4mNxOsa1uiURy3rEP5mAUVNxDfFS37j+e4rZ46gbojy1rQvV7/xhHU9FKByutDZDb0GUkbaQ54xHHoGMBRbeNT5gd32WS3Z/Uv9eJOYEIwWg9V+m/4YRdljHcmURA+Gt9RsV+IwfmwXFY/254AlhJ5SD+q1oFZ2Q1kqHYsziU9NwhBee6ZerroFkZcui0WNFmtvmehNaDEZF36wdekyFDsSfCDS5Pnsg5ynelbPDOrbzV74b2Dqc9yC+Z3cw5EEeNWNzrPLdqBDsA6enQcArOFxlaVYa4I0SL2xYqygwMBg1RzQ5Tv+fXblOSXCilMoIP7pX00AK677jgXrJ291Zlk3GZ2+eUIvzwFKk8rtu4eD0rEL9vctdqPSaT5r0pRtGyzpjF59i1sJSi+ZMWdNSMAWyWz9ac/cYGkqub2gVmVSETcg2sMS8puDgFMq+0DfiO0cXsmcIjmo1IcT1+43YUcibuu2pcgOjlygx69nFXceiE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIFVzCCAz+gAwIBAgIJAMqxE0LEkwxkMA0GCSqGSIb3DQEBCwUAMFExTzBNBgNVBAMeRgBUAGUAcwB0ACAAYwBlAHIAdABpAGYAaQBjAGEAdABlACAAZgBvAHIAIAAnAFMAawB5AEMAYQBsACAAWwBPAFMAUwBdACcwHhcNMjUxMDIyMTQ1MDEwWhcNMjgxMDIyMTQ1MDEwWjBRMU8wTQYDVQQDHkYAVABlAHMAdAAgAGMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGYAbwByACAAJwBTAGsAeQBDAGEAbAAgAFsATwBTAFMAXQAnMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAuiQzp8mpxn2ZkjPpuAx69hbdhDSELn+UyTKdaXmh108oIe5hvZ1NizQowpQMWVLpxOG8bLq8Gr/ZDZpbomMcP2xKWpncVqy8ajMXj2c/hl8+M/46d6KwbhvpQUwJ9SbRv3SSCdio6D49d2fNTJAKIkoza8aaUuj9d79ag/lxW69VECgEvsiVHz3wTZ1UsH4mNxOsa1uiURy3rEP5mAUVNxDfFS37j+e4rZ46gbojy1rQvV7/xhHU9FKByutDZDb0GUkbaQ54xHHoGMBRbeNT5gd32WS3Z/Uv9eJOYEIwWg9V+m/4YRdljHcmURA+Gt9RsV+IwfmwXFY/254AlhJ5SD+q1oFZ2Q1kqHYsziU9NwhBee6ZerroFkZcui0WNFmtvmehNaDEZF36wdekyFDsSfCDS5Pnsg5ynelbPDOrbzV74b2Dqc9yC+Z3cw5EEeNWNzrPLdqBDsA6enQcArOFxlaVYa4I0SL2xYqygwMBg1RzQ5Tv+fXblOSXCilMoIP7pX00AK677jgXrJ291Zlk3GZ2+eUIvzwFKk8rtu4eD0rEL9vctdqPSaT5r0pRtGyzpjF59i1sJSi+ZMWdNSMAWyWz9ac/cYGkqub2gVmVSETcg2sMS8puDgFMq+0DfiO0cXsmcIjmo1IcT1+43YUcibuu2pcgOjlygx69nFXceiECAwEAAaMyMDAwCQYDVR0TBAIwADAOBgNVHQ8BAf8EBAMCB4AwEwYDVR0lBAwwCgYIKwYBBQUHAwMwDQYJKoZIhvcNAQELBQADggIBACyyMCK3PJTbTYijCaBxX5v3DLozuH8N3qTZ2h6x/IjT+fV0q6pe2ugyuZtJWJ2dTtGPf2tFl6Vsx3nsGLneqN8/lur+4bTeWQoySYITzhMgj8ix639/ysh5T+wwNFTXkPObkUE1VPbjzPtrqWKFnSPqlPLz2+tj8xROPLYi1ltnuFLD+Hv1WTcrEMW4sLTsw1QgpYQ/JBskYUdy6kfSQK+qr+yjUTFFIjfD5P3YWXhKq8Jsf9FEG57cC8eZh+d8gcFRGOWQc0g9gi9gQBK5KNwMopgGyh3kjeQzIYfonNnqWKERyou2MJemUnNasor26Pr4DHbIyTgqlHLNvwKOE50WW7J7kIPLJaOdF3oI9g/AUbfrHPjfj1nMoetbXLZev2Ls4nmreKMPi0Jl4x/x3bFlEuOfkPSCGfBO2qqc3HrTB+VpALUXbxAClDkizX2x4qloOD7jCh4iDdxLXU0ibEfmgg7vZ3lzjv3uS0PObq3ivvHdgr7jZq1ehL/rXOy5KI07kDluaRs06he07FeMOgtUupdOf7ooGZDjA7pw997QVtHFvMLZFBtGsHrrU0Ai9wyQRhCYlWbRGu9KLI5UwNb7E4T8J4T0IKRT8MS8OTaGMsCvuLs2fCAbs+0Z5+Uhhs/m5t8wrVJMJvPm9UBTPPLri06z9JqKBFXi6uYlkrIO</X509Certificate></X509Data></KeyInfo><Object><as:Timestamp>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</as:Timestamp></Object></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
