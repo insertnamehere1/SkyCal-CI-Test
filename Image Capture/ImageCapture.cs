@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Speech.Synthesis.TtsEngine;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -58,7 +60,7 @@ namespace Bahtinov_Collimator
         private const int PW_RENDERFULLCONTENT = 0x2;
 
         // Threshold for detecting significant movement
-        private const int MovementThreshold = 5;
+        private const int MovementThreshold = 1;
         #endregion
 
         #region Private Fields
@@ -67,6 +69,8 @@ namespace Bahtinov_Collimator
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
         private static string firstHash = "";
+        private static bool notEqualLastTick = true;
+        private static bool newImageSend = false;
         #endregion
 
         #region Public Fields
@@ -101,66 +105,71 @@ namespace Bahtinov_Collimator
             captureTimer = null;
         }
 
-        /// <summary>
-        /// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments for the tick event.</param>
+        ///// <summary>
+        ///// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
+        ///// </summary>
+        ///// <param name="sender">The source of the event.</param>
+        ///// <param name="e">Event arguments for the tick event.</param>
         private static void CaptureTimer_Tick(object sender, EventArgs e)
         {
             Bitmap image = GetImage();
-
             if (image == null)
                 return;
 
-            // Check if this is a new image
+            // Hash check for duplicate frames
             string secondHash = Utilities.ComputeHash(image);
+            bool isSameImage = firstHash.Equals(secondHash);
 
-            if (firstHash.Equals(secondHash))
+            if (isSameImage)
             {
-                captureTimer.Interval = 200;
-                return;
+                if (notEqualLastTick)
+                {
+                    newImageSend = true;
+                    notEqualLastTick = false;
+                }
+                else
+                {
+                    return;
+                }
             }
             else
+            {
                 firstHash = secondHash;
+                notEqualLastTick = true;
+            }
 
-            Bitmap latestImage = CreateCircularImage(image);
-            Bitmap updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
-
+            Bitmap latestImage = null;
+            Bitmap updatedImage = null;
             Graphics g = null;
 
             try
             {
+                latestImage = CreateCircularImage(image);
+                updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
+
                 g = Graphics.FromImage(updatedImage);
+                g.Clear(UITheme.DarkBackground);
 
-                // Fill the entire image with black before drawing
-                g.Clear(Color.Black);
+                // Compute movement offset
+                Point offset = Point.Empty;
 
-                if (TrackingType == 1) // bahtinov style image
+                if (TrackingType == 1)        // bahtinov
                 {
-                    // Get offset for the brightest area
-                    Point offset = FindBrightestAreaCentroid(latestImage);
+                    offset = FindBrightestAreaCentroid(latestImage);
 
                     if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
                         captureTimer.Interval = 10;
 
-                    // Calculate translation
-                    int delta_X = (latestImage.Width / 2) - offset.X;
-                    int delta_Y = (latestImage.Height / 2) - offset.Y;
+                    int dx = (latestImage.Width / 2) - offset.X;
+                    int dy = (latestImage.Height / 2) - offset.Y;
 
-                    // Update selectedStarBox with new position
-                    selectedStarBox.Offset(-delta_X, -delta_Y);
-
-                    // Apply translation transformation to the Graphics object
-                    g.TranslateTransform(delta_X, delta_Y);
+                    selectedStarBox.Offset(-dx, -dy);
+                    g.TranslateTransform(dx, dy);
                 }
-                else if (TrackingType == 2) // defocus style image
+                else if (TrackingType == 2)   // defocus
                 {
-                    Point offset;
-
                     try
                     {
-                        // Get offset for the inner circle
                         offset = FindInnerCircleOffset(latestImage);
                     }
                     catch (InvalidOperationException)
@@ -172,41 +181,38 @@ namespace Bahtinov_Collimator
                     if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
                         captureTimer.Interval = 10;
 
-                    // Update selectedStarBox with new position
                     selectedStarBox.Offset(offset.X, offset.Y);
-
-                    // Apply translation transformation to the Graphics object
                     g.TranslateTransform(-offset.X, -offset.Y);
                 }
 
-                // Calculate the center position
+                // Draw centered image
                 int x = (UITheme.DisplayWindow.X - latestImage.Width) / 2;
                 int y = (UITheme.DisplayWindow.Y - latestImage.Height) / 2;
 
-                // Draw the image at the calculated position
                 g.DrawImage(latestImage, x, y);
                 g.ResetTransform();
 
-                // distribut new image
-                ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
+                // Only send when next frame is stable
+                if (newImageSend)
+                {
+                    ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
+                    newImageSend = false;
+                    captureTimer.Interval = 200;
+                }
             }
-            catch(Exception)
+            catch
             {
-                if(captureTimer != null)
+                if (captureTimer != null)
+                {
                     DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
-
+                }
                 return;
             }
             finally
             {
-                // Dispose of the Graphics object if it was created
-                if (g != null)
-                {
-                    g?.Dispose();
-                }
-
-                // Dispose of the original image
-                latestImage.Dispose();
+                g?.Dispose();
+                latestImage?.Dispose();
+                image?.Dispose();
             }
         }
 
@@ -489,163 +495,144 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Finds the centroid of the brightest area in a bitmap image. The method first calculates a brightness threshold that includes the top 10% of the brightest pixels. It then creates a binary image based on this threshold and determines the centroid of the brightest area from the binary image.
+        /// Finds the centroid of the brightest compact region in a bitmap, robust to
+        /// secondary fainter stars. It:
+        ///  1) Converts the image to 8-bit luminance (no thresholding).
+        ///  2) Builds an integral image (summed-area table).
+        ///  3) Slides a fixed-size square window to locate the maximum summed luminance.
+        ///  4) Refines the position with an intensity-weighted centroid in a small radius.
+        /// Returns image coordinates suitable for centering the Bahtinov pattern.
         /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to find the brightest area.</param>
-        /// <returns>A <see cref="Point"/> representing the centroid of the brightest area in the image.</returns>
+        /// <param name="bitmap">The source bitmap (any common 24/32bpp format).</param>
+        /// <returns>Centroid of the brightest region. Falls back to image center if it cannot compute.</returns>
         public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
-            byte threshold = CalculateThreshold(bitmap, 0.10f); // 10% brightest pixels
-            using (Bitmap binaryImage = ApplyThreshold(bitmap, threshold))
+            if (bitmap == null) return new Point(0, 0);
+
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            if (width < 8 || height < 8)
+                return new Point(0, 0);
+
+            PixelFormat pf = bitmap.PixelFormat;
+            bool supported = pf == PixelFormat.Format24bppRgb || pf == PixelFormat.Format32bppArgb ||
+                             pf == PixelFormat.Format32bppRgb || pf == PixelFormat.Format32bppPArgb;
+
+            Bitmap src = supported ? bitmap : bitmap.Clone(
+                new Rectangle(0, 0, width, height), PixelFormat.Format24bppRgb);
+
+            BitmapData bd = null;
+            byte[] lum = new byte[width * height];
+            try
             {
-                Point centroid = FindBlobCentroid(binaryImage);
-                return centroid;
-            }
-        }
-
-        /// <summary>
-        /// Calculates the brightness threshold for the top percentage of brightest pixels in a bitmap image. The method extracts green channel values from the image, sorts them, and determines the threshold value to include the specified percentage of the brightest pixels.
-        /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to calculate the threshold.</param>
-        /// <param name="topPercent">The percentage of the brightest pixels to include in the threshold calculation (e.g., 0.10 for the top 10%).</param>
-        /// <returns>A <see cref="byte"/> representing the calculated brightness threshold.</returns>
-        private static byte CalculateThreshold(Bitmap bitmap, float topPercent)
-        {
-            int pixelCount = bitmap.Width * bitmap.Height;
-            byte[] greenChannelValues = new byte[pixelCount];
-
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-            unsafe
-            {
-                byte* ptr = (byte*)bitmapData.Scan0;
-                int stride = bitmapData.Stride;
-
-                int bitmapHeight = bitmap.Height;
-                int bitmapWidth = bitmap.Width;
-
-                for (int y = 0; y < bitmapHeight; y++)
+                bd = src.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, src.PixelFormat);
+                int stride = bd.Stride;
+                int bpp = Image.GetPixelFormatSize(src.PixelFormat) / 8;
+                unsafe
                 {
-                    byte* row = ptr + y * stride;
-
-                    for (int x = 0; x < bitmapWidth; x++)
+                    byte* basePtr = (byte*)bd.Scan0;
+                    int idx = 0;
+                    for (int y = 0; y < height; y++)
                     {
-                        byte greenValue = row[x * 3 + 1];
-                        greenChannelValues[y * bitmapWidth + x] = greenValue;
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(bitmapData);
-
-            Array.Sort(greenChannelValues);
-            int thresholdIndex = (int)(pixelCount * (1 - topPercent)) - 1;
-            return greenChannelValues[thresholdIndex];
-        }
-
-        /// <summary>
-        /// Converts a color bitmap to a binary bitmap based on a brightness threshold. Pixels with a green channel value greater than or equal to the specified threshold are set to white; all other pixels are set to black.
-        /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image to be thresholded.</param>
-        /// <param name="threshold">The brightness threshold value. Pixels with a green channel value greater than or equal to this threshold are set to white in the resulting binary image.</param>
-        /// <returns>A <see cref="Bitmap"/> in 1-bit per pixel format where pixels are either black or white based on the threshold.</returns>
-        private static Bitmap ApplyThreshold(Bitmap bitmap, byte threshold)
-        {
-            Bitmap binaryBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format1bppIndexed);
-            BitmapData binaryData = binaryBitmap.LockBits(new Rectangle(0, 0, binaryBitmap.Width, binaryBitmap.Height),
-                ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
-            BitmapData colorData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-            unsafe
-            {
-                byte* binaryPtr = (byte*)binaryData.Scan0;
-                byte* colorPtr = (byte*)colorData.Scan0;
-
-                int stride = binaryData.Stride;
-                int colorStride = colorData.Stride;
-
-                int bitmapHeight = binaryBitmap.Height;
-                int bitmapWidth = binaryBitmap.Width;
-
-                for (int y = 0; y < bitmapHeight; y++)
-                {
-                    byte* binaryRow = binaryPtr + y * stride;
-                    byte* colorRow = colorPtr + y * colorStride;
-
-                    for (int x = 0; x < bitmapWidth; x++)
-                    {
-                        byte greenValue = colorRow[x * 3 + 1];
-                        byte bit = (greenValue >= threshold) ? (byte)1 : (byte)0;
-                        int bitIndex = x % 8;
-                        int byteIndex = x / 8;
-
-                        if (bit == 1)
+                        byte* row = basePtr + y * stride;
+                        for (int x = 0; x < width; x++)
                         {
-                            binaryRow[byteIndex] |= (byte)(1 << (7 - bitIndex));
-                        }
-                        else
-                        {
-                            binaryRow[byteIndex] &= (byte)~(1 << (7 - bitIndex));
+                            byte b = row[x * bpp + 0];
+                            byte g = row[x * bpp + 1];
+                            byte r1 = row[x * bpp + 2];
+                            int y8 = (int)(0.299 * r1 + 0.587 * g + 0.114 * b + 0.5);
+                            if (y8 > 255) y8 = 255;
+                            lum[idx++] = (byte)y8;
                         }
                     }
                 }
             }
-
-            binaryBitmap.UnlockBits(binaryData);
-            bitmap.UnlockBits(colorData);
-
-            return binaryBitmap;
-        }
-
-        /// <summary>
-        /// Calculates the centroid of the white areas in a binary bitmap. The centroid is determined by averaging the coordinates of all white pixels. If no white pixels are found, the method returns the center of the image.
-        /// </summary>
-        /// <param name="binaryImage">The <see cref="Bitmap"/> image in 1-bit per pixel format where white pixels are considered as part of the blob.</param>
-        /// <returns>A <see cref="Point"/> representing the centroid of the white areas in the binary image. If no white pixels are found, returns the center of the image.</returns>
-        private static Point FindBlobCentroid(Bitmap binaryImage)
-        {
-            long sumX = 0, sumY = 0, count = 0;
-            int width = binaryImage.Width;
-            int height = binaryImage.Height;
-
-            BitmapData bitmapData = binaryImage.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadOnly, PixelFormat.Format1bppIndexed);
-
-            unsafe
+            finally
             {
-                byte* ptr = (byte*)bitmapData.Scan0;
-                int stride = bitmapData.Stride;
+                if (bd != null) src.UnlockBits(bd);
+                if (!ReferenceEquals(src, bitmap)) src.Dispose();
+            }
 
-                for (int y = 0; y < height; y++)
+            // Quick test: if average brightness is low, no meaningful centroid
+            double avg = lum.Average(b => (double)b);
+            if (avg < 5.0)  // all dark
+                return new Point(0, 0);
+
+            // Build integral image
+            int W1 = width + 1;
+            int H1 = height + 1;
+            int[] ii = new int[W1 * H1];
+
+            for (int y = 1; y < H1; y++)
+            {
+                int rowSum = 0;
+                int offLum = (y - 1) * width;
+                int offII = y * W1;
+                for (int x = 1; x < W1; x++)
                 {
-                    byte* row = ptr + y * stride;
+                    rowSum += lum[offLum + (x - 1)];
+                    ii[offII + x] = ii[(y - 1) * W1 + x] + rowSum;
+                }
+            }
 
-                    for (int x = 0; x < width; x++)
+            int win = Math.Max(9, Math.Min(width, height) / 16);
+            if ((win & 1) == 0) win++;
+            int r = win / 2;
+
+            int bestX = 0, bestY = 0;
+            int bestSum = -1;
+
+            for (int y = r; y < height - r; y++)
+            {
+                int y0 = y - r;
+                int y1 = y + r + 1;
+                int rowTop = y0 * W1;
+                int rowBot = y1 * W1;
+
+                for (int x = r; x < width - r; x++)
+                {
+                    int x0 = x - r;
+                    int x1 = x + r + 1;
+
+                    int sum = ii[rowBot + x1] - ii[rowBot + x0] - ii[rowTop + x1] + ii[rowTop + x0];
+                    if (sum > bestSum)
                     {
-                        if ((row[x / 8] & (1 << (7 - (x % 8)))) != 0)
-                        {
-                            sumX += x;
-                            sumY += y;
-                            count++;
-                        }
+                        bestSum = sum;
+                        bestX = x;
+                        bestY = y;
                     }
                 }
             }
 
-            binaryImage.UnlockBits(bitmapData);
+            if (bestSum < 10000)  // nothing bright enough, adjust threshold as needed
+                return new Point(0, 0);
 
-            if (count == 0)
+            // Refine with intensity-weighted centroid
+            int refineRadius = Math.Max(3, win / 3);
+            long wSum = 0, wX = 0, wY = 0;
+
+            int xStart = Math.Max(0, bestX - refineRadius);
+            int xEnd = Math.Min(width - 1, bestX + refineRadius);
+            int yStart = Math.Max(0, bestY - refineRadius);
+            int yEnd = Math.Min(height - 1, bestY + refineRadius);
+
+            for (int y = yStart; y <= yEnd; y++)
             {
-                return new Point(width / 2, height / 2); // Default to center if no bright area is found
+                int baseIdx = y * width;
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    int w = lum[baseIdx + x];
+                    if (w > 0) { wSum += w; wX += (long)w * x; wY += (long)w * y; }
+                }
             }
 
-            // Calculate centroid
-            double centroidX = sumX / count;
-            double centroidY = sumY / count;
+            if (wSum == 0)
+                return new Point(0, 0);
 
-            return new Point((int)Math.Round(centroidX), (int)Math.Round(centroidY));
+            double cx = (double)wX / wSum;
+            double cy = (double)wY / wSum;
+
+            return new Point((int)Math.Round(cx), (int)Math.Round(cy));
         }
         #endregion
     }

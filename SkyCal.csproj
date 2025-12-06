@@ -7,7 +7,7 @@
     <ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Bahtinov_Collimator</RootNamespace>
-    <AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
+    <AssemblyName>SkyCal</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -30,11 +30,10 @@
     <UpdateUrl>https://github.com/insertnamehere1/SkyCal-CI-Test/raw/master/published/</UpdateUrl>
     <ProductName>SkyCal Focus and Collimation Tool</ProductName>
     <PublisherName>Chris Dowd</PublisherName>
-    <CreateWebPageOnPublish>false</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.5</ApplicationVersion>
+    <ApplicationVersion>4.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -106,13 +105,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>focusIcon2.ico</ApplicationIcon>
+    <ApplicationIcon>SkyCal.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -134,13 +133,16 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MathNet.Numerics.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Speech" />
@@ -166,6 +168,36 @@
     </Compile>
     <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\HistoryBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\HistoryBar.Designer.cs">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedButton.Designer.cs">
+      <DependentUpon>RoundedButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.Designer.cs">
+      <DependentUpon>RoundedGroupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.Designer.cs">
+      <DependentUpon>RoundedPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.Designer.cs">
+      <DependentUpon>RoundedPictureBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Custom Components\SlideSwitchComponent.cs">
       <SubType>UserControl</SubType>
@@ -209,13 +241,13 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\Helper.cs" />
-    <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Helper.cs" />
+    <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -235,9 +267,11 @@
     <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
-    <Content Include="SkyCal.logo.png" />
     <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\HistoryBar.resx">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -269,10 +303,6 @@
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="help.pdf" />
-    <None Include="Properties\help.pdf" />
-    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -283,15 +313,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Content Include="Resources\help.pdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Resources\whatsNew.pdf" />
-    <None Include="SkyCal_TemporaryKey.pfx" />
-    <None Include="WhatsNew.pdf" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -306,16 +327,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\imageLost.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="focusIcon2.ico" />
-    <Content Include="Images\Adjustments.png" />
-    <Content Include="Images\arrow.png" />
-    <None Include="Images\focusImage.png" />
-    <Content Include="Images\focusIcon2.ico" />
-    <Content Include="Images\paypal.png" />
     <Content Include="published\.gitattributes" />
+    <Content Include="SkyCal.ico" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="published\.gitattributes">
@@ -329,13 +342,8 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
-  </Target>
 </Project>

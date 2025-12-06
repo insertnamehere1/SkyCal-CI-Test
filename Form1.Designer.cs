@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.StartButton = new System.Windows.Forms.Button();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,26 +39,17 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.RoundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
+            this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
-            this.whatsNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.menuStrip1.SuspendLayout();
+            this.RoundedPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // StartButton
-            // 
-            this.StartButton.Location = new System.Drawing.Point(39, 557);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(4);
-            this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(172, 48);
-            this.StartButton.TabIndex = 0;
-            this.StartButton.Text = "Select Star";
-            this.StartButton.UseVisualStyleBackColor = true;
-            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // menuStrip1
             // 
@@ -68,10 +58,11 @@
             this.fileToolStripMenuItem,
             this.AdjustAssistToolStripMenuItem,
             this.settingsToolStripMenuItem1,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.pleaseDonateToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(734, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(920, 28);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -110,8 +101,6 @@
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem,
-            this.donateToolStripMenuItem,
-            this.whatsNewToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
@@ -120,37 +109,64 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
             this.helpToolStripMenuItem.Text = "User Manual";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
-            // 
-            // donateToolStripMenuItem
-            // 
-            this.donateToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.donateToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.donateToolStripMenuItem.Text = "Buy me a Coffee?";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(213, 26);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
+            // 
+            // pleaseDonateToolStripMenuItem
+            // 
+            this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 24);
+            this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
+            this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
+            // 
+            // RoundedPanel1
+            // 
+            this.RoundedPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.RoundedPanel1.BorderColor = System.Drawing.Color.Gray;
+            this.RoundedPanel1.BorderThickness = 4;
+            this.RoundedPanel1.Controls.Add(this.RoundedStartButton);
+            this.RoundedPanel1.Controls.Add(this.slideSwitch2);
+            this.RoundedPanel1.Controls.Add(this.label1);
+            this.RoundedPanel1.Controls.Add(this.Label2);
+            this.RoundedPanel1.CornerRadius = 12;
+            this.RoundedPanel1.FillColor = System.Drawing.Color.DimGray;
+            this.RoundedPanel1.ForeColor = System.Drawing.Color.White;
+            this.RoundedPanel1.Location = new System.Drawing.Point(11, 512);
+            this.RoundedPanel1.Name = "RoundedPanel1";
+            this.RoundedPanel1.Size = new System.Drawing.Size(254, 134);
+            this.RoundedPanel1.TabIndex = 27;
+            // 
+            // slideSwitch2
+            // 
+            this.slideSwitch2.IsOn = false;
+            this.slideSwitch2.Location = new System.Drawing.Point(104, 22);
+            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
+            this.slideSwitch2.Name = "slideSwitch2";
+            this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
+            this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
+            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
+            this.slideSwitch2.TabIndex = 24;
+            this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 496);
+            this.label1.Location = new System.Drawing.Point(27, 25);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 16);
@@ -160,42 +176,48 @@
             // Label2
             // 
             this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(154, 497);
+            this.Label2.Location = new System.Drawing.Point(158, 26);
             this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(57, 16);
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
             // 
-            // slideSwitch2
+            // RoundedStartButton
             // 
-            this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(100, 493);
-            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
-            this.slideSwitch2.Name = "slideSwitch2";
-            this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
-            this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
-            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
-            this.slideSwitch2.TabIndex = 24;
-            this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
-            // 
-            // whatsNewToolStripMenuItem
-            // 
-            this.whatsNewToolStripMenuItem.Name = "whatsNewToolStripMenuItem";
-            this.whatsNewToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.whatsNewToolStripMenuItem.Text = "What\'s New";
-            this.whatsNewToolStripMenuItem.Click += new System.EventHandler(this.WhatsNewToolStripMenuItem_Click);
+            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
+            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.RoundedStartButton.BevelThickness = 4;
+            this.RoundedStartButton.CornerRadius = 8;
+            this.RoundedStartButton.FlatAppearance.BorderSize = 0;
+            this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
+            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
+            this.RoundedStartButton.ImageHeight = 32;
+            this.RoundedStartButton.ImageOffsetX = 50;
+            this.RoundedStartButton.ImageOffsetY = 0;
+            this.RoundedStartButton.ImageWidth = 32;
+            this.RoundedStartButton.Location = new System.Drawing.Point(46, 67);
+            this.RoundedStartButton.Name = "RoundedStartButton";
+            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.RoundedStartButton.Size = new System.Drawing.Size(160, 44);
+            this.RoundedStartButton.TabIndex = 25;
+            this.RoundedStartButton.Text = "    Select Star";
+            this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.RoundedStartButton.TextOffsetX = 10;
+            this.RoundedStartButton.UseVisualStyleBackColor = false;
+            this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(744, 647);
-            this.Controls.Add(this.slideSwitch2);
-            this.Controls.Add(this.Label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.StartButton);
+            this.ClientSize = new System.Drawing.Size(930, 652);
+            this.Controls.Add(this.RoundedPanel1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -209,14 +231,14 @@
             this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.RoundedPanel1.ResumeLayout(false);
+            this.RoundedPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Timer UpdateTimer;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -226,13 +248,14 @@
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AdjustAssistToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Label2;
         private Custom_Components.SlideSwitch slideSwitch2;
-        private System.Windows.Forms.ToolStripMenuItem whatsNewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pleaseDonateToolStripMenuItem;
+        private Custom_Components.RoundedButton RoundedStartButton;
+        private Custom_Components.RoundedPanel RoundedPanel1;
     }
 }
 

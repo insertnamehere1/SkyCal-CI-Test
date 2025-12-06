@@ -81,42 +81,12 @@ namespace Bahtinov_Collimator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon focusIcon2 {
-            get {
-                object obj = ResourceManager.GetObject("focusIcon2", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap focusImage {
-            get {
-                object obj = ResourceManager.GetObject("focusImage", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] help {
             get {
                 object obj = ResourceManager.GetObject("help", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap imageLost {
-            get {
-                object obj = ResourceManager.GetObject("imageLost", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -131,12 +101,52 @@ namespace Bahtinov_Collimator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectionCircle {
+            get {
+                object obj = ResourceManager.GetObject("SelectionCircle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] whatsNew {
+        internal static byte[] SkyCal {
             get {
-                object obj = ResourceManager.GetObject("whatsNew", resourceCulture);
+                object obj = ResourceManager.GetObject("SkyCal", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SkyCal_logo {
+            get {
+                object obj = ResourceManager.GetObject("SkyCal.logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Stop {
+            get {
+                object obj = ResourceManager.GetObject("Stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TBMask_DarkGray {
+            get {
+                object obj = ResourceManager.GetObject("TBMask_DarkGray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

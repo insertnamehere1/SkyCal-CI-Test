@@ -1,4 +1,4 @@
-name: Build, Test, and Release (ClickOnce)
+name: Build, Test, Signpath and Release (ClickOnce)
 
 on: 
   push:
@@ -146,7 +146,7 @@ jobs:
           fetch-depth: 0
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: csharp
 
@@ -163,7 +163,7 @@ jobs:
         run: msbuild "Bahtinov Collimator.sln" /t:Rebuild /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
 
   release:
     name: Release (tag only)
@@ -261,7 +261,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true  # propagate native tool errors
+          $PSNativeCommandUseErrorActionPreference = $true
           Copy-Item "dist\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
           Remove-Item -Recurse -Force "dist"
