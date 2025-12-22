@@ -101,8 +101,14 @@ jobs:
           /p:Configuration=Release
           /p:Deterministic=true
           /p:TreatWarningsAsErrors=true
-          
-      - name: ClickOnce Publish (Online)
+
+      - name: Clean publish folders
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force out\clickonce-online  -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force out\clickonce-offline -ErrorAction SilentlyContinue
+
+      - name: ClickOnce Publish (Online feed)
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
@@ -110,6 +116,13 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceOnline.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce-online\"
+          /p:InstallFrom=Web
+          /p:UpdateEnabled=true
+          /p:UpdateMode=Foreground
+          /p:GenerateDeploymentProviderUrl=true
+          /p:DeploymentUrl=https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/SkyCal.application
+          /p:InstallUrl=https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/
+          /p:UpdateUrl=https://raw.githubusercontent.com/insertnamehere1/SkyCal-CI-Test/master/published/
 
       - name: ClickOnce Publish (Offline)
         shell: pwsh
@@ -119,6 +132,14 @@ jobs:
           /p:Configuration=Release
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceOffline.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce-offline\"
+          /p:InstallFrom=Disk
+          /p:UpdateEnabled=false
+          /p:GenerateDeploymentProviderUrl=false
+          /p:DeploymentUrl=
+          /p:InstallUrl=
+          /p:UpdateUrl=
+          /p:PublishUrl=
+          /p:IsWebBootstrapper=false
 
       - name: Rename ClickOnce setup.exe (Online)
         shell: pwsh
