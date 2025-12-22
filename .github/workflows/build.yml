@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+          
       - name: Sync ApplicationVersion + AssemblyInfo from tag (no new XML nodes)
         if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
@@ -76,7 +76,7 @@ jobs:
       
           git add -A
           git diff --staged -- . | Write-Host
-          
+
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v2
 
@@ -201,17 +201,17 @@ jobs:
           Remove-Item "dist/SkyCal Focus and Collimation Tool.exe" -Force -ErrorAction SilentlyContinue
 
       # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
-#      - name: Submit to SignPath and wait
-#        id: sign
-#        uses: SignPath/github-action-submit-signing-request@v2
-#        with:
-#          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-#          organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
-#          project-slug: Bahtinov-Collimator
-#          signing-policy-slug: release-signing
-#          github-artifact-id: ${{ needs.build.outputs.artifact_id }}
-#          wait-for-completion: true
-#          output-artifact-directory: dist 
+      - name: Submit to SignPath and wait
+        id: sign
+        uses: SignPath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
+          project-slug: Bahtinov-Collimator
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ needs.build.outputs.artifact_id }}
+          wait-for-completion: true
+          output-artifact-directory: dist 
 
       - name: Generate SHA256 sums for dist
         shell: pwsh
